@@ -54,19 +54,21 @@ that lead to each maximal clique is the probability of that outcome.
 
 Let $G$ be a directed bipartite graph with parts $V_{token}$ and $V_{event}$.
 
-$\displaystyle\qquad\begin{aligned}& G= (V_{token} \cup V_{event}, E), \\ &E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})\end{aligned}$
+$\displaystyle\qquad G= (V_{token} \cup V_{event}, E),$
+
+$\displaystyle\qquad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
 
 At each new step, the latest set of tokens $L_{token}$ is connected
 to a new set of events that produces the next generation of tokens.
 
-$\displaystyle\qquad L_{token}=\big\{v \in V_{token}\mid\mathbf{deg^+} (v)=0\big\}$
+$\displaystyle\qquad L_{token}=\big\lbrace v \in V_{token}\mid\mathbf{deg^+} (v)=0 \big\rbrace$
 
 Two tokens are spacelike, iff all their
 [lowest common ancestors](https://en.wikipedia.org/wiki/Lowest_common_ancestor)
 (LCA) are events. This means that the concept of space $S(X)\subset L_{token}$
 is always relative to some observer $X\subset L_{token}$.
 
-$\displaystyle\qquad S(X)=\big\{v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v){:}\: a \in V_{event}\big\}$
+$\displaystyle\qquad S(X)=\big\lbrace v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v){:}\: a \in V_{event}\big\rbrace$
 
 Let the sample space $\Omega$ be some subset of the space.
 
@@ -201,4 +203,8 @@ to one in high dimensional vector spaces.
 
 Let $r$ be the length of a hypervector in $n$ dimensional space.
 
-$\displaystyle\qquad\begin{aligned} r & =\sqrt{x_1^2+x_2^2+\dots+x_n^2} \qquad \Bigg| \cdot ()^2 \quad \Bigg| \cdot {1 \over {r^2}} \\ \\ 1 & = \left({{x_1} \over r}\right)^2+\left({{x_2} \over r}\right)^2 + \dots + \left({{x_n} \over r}\right)^2 \\ \\ 1 & = cos^2 \theta_1 + cos^2 \theta_2 + \dots + cos^2 \theta_n \:_\square\end{aligned}$
+$\displaystyle\qquad r =\sqrt{x_1^2+x_2^2+\dots+x_n^2} \qquad \Bigg| \cdot ()^2 \quad \Bigg| \cdot {1 \over {r^2}}
+
+$\displaystyle\qquad 1 = \left({{x_1} \over r}\right)^2+\left({{x_2} \over r}\right)^2 + \dots + \left({{x_n} \over r}\right)^2$
+
+$\displaystyle\qquad 1 = cos^2 \theta_1 + cos^2 \theta_2 + \dots + cos^2 \theta_n \:_\square$
