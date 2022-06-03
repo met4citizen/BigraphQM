@@ -1,0 +1,450 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="207.20000000000002px" height="170.80000000000004px" viewBox="0.00 0.00 222.00 183.00">
+<path class="dragline hidden" d="M0,0L0,0"></path><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 179)">
+<!-- 1.0&#45;&gt;2.0 -->
+<g id="edge17" class="edge link">
+<title>1.0-&gt;2.0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M57.9,-139.07C49.94,-134.82 39.45,-129.22 32.48,-125.49"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="33.16,-123.88 27.93,-123.06 31.52,-126.96 33.16,-123.88"></polygon>
+</g>
+<!-- 1.0&#45;&gt;1.1 -->
+<g id="edge1" class="edge order">
+<title>1.0-&gt;1.1</title>
+<g id="a_edge1"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M80.27,-146C86.05,-146 91.83,-146 97.6,-146"></path>
+</a>
+</g>
+</g>
+<!-- 3.0&#45;&gt;4.0 -->
+<g id="edge3" class="edge order">
+<title>3.0-&gt;3.1</title>
+<g id="a_edge3"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M22.27,-95C28.05,-95 33.83,-95 39.6,-95"></path>
+</a>
+</g>
+</g><g id="edge29" class="edge link">
+<title>3.0-&gt;4.0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M11,-83.9C11,-82.03 11,-80.11 11,-78.32"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="12.75,-78.06 11,-73.06 9.25,-78.06 12.75,-78.06"></polygon>
+</g>
+<!-- 3.0&#45;&gt;3.1 -->
+<g id="edge22" class="edge link">
+<title>1.2-&gt;2.2</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M158.1,-139.07C166.06,-134.82 176.55,-129.22 183.52,-125.49"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="184.48,-126.96 188.07,-123.06 182.84,-123.88 184.48,-126.96"></polygon>
+</g>
+<!-- 5.0&#45;&gt;5.1 -->
+<g id="edge8" class="edge order">
+<title>5.0-&gt;5.1</title>
+<g id="a_edge8"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M22.27,-44C28.05,-44 33.83,-44 39.6,-44"></path>
+</a>
+</g>
+</g>
+<!-- 1.2&#45;&gt;2.2 -->
+
+<!-- 3.5&#45;&gt;4.5 -->
+<g id="edge34" class="edge link">
+<title>3.5-&gt;4.5</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M203,-83.9C203,-82.03 203,-80.11 203,-78.32"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="204.75,-78.06 203,-73.06 201.25,-78.06 204.75,-78.06"></polygon>
+</g>
+<!-- 0.0&#45;&gt;1.0 -->
+<g id="edge14" class="edge link">
+<title>0.0-&gt;1.0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M105.44,-168.96C101.29,-166.46 92.76,-161.32 85,-156.64"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="85.49,-154.89 80.31,-153.81 83.69,-157.89 85.49,-154.89"></polygon>
+</g><g id="edge23" class="edge link">
+<title>2.0-&gt;3.0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M23.5,-116.99C22.55,-115.39 21.23,-113.17 19.8,-110.78"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="21.24,-109.77 17.18,-106.37 18.23,-111.56 21.24,-109.77"></polygon>
+</g>
+<!-- 0.0&#45;&gt;1.2 -->
+<g id="edge16" class="edge link">
+<title>0.0-&gt;1.2</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M110.56,-168.96C114.71,-166.46 123.24,-161.32 131,-156.64"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="132.31,-157.89 135.69,-153.81 130.51,-154.89 132.31,-157.89"></polygon>
+</g><g id="edge24" class="edge link">
+<title>2.1-&gt;3.1</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M61.61,-116.99C60.51,-115 58.88,-112.05 57.19,-109"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="58.5,-107.75 54.55,-104.22 55.44,-109.44 58.5,-107.75"></polygon>
+</g>
+<!-- 0.0&#45;&gt;1.1 -->
+<g id="edge15" class="edge link">
+<title>0.0-&gt;1.1</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M108,-167.99C108,-166.3 108,-163.92 108,-161.38"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="109.75,-161.07 108,-156.07 106.25,-161.07 109.75,-161.07"></polygon>
+</g><g id="edge25" class="edge link">
+<title>2.2-&gt;3.5</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M192.28,-116.99C193.06,-115.47 194.12,-113.39 195.27,-111.14"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="196.99,-111.62 197.71,-106.37 193.87,-110.02 196.99,-111.62"></polygon>
+</g>
+<!-- 2.0&#45;&gt;3.0 -->
+<g id="edge26" class="edge link">
+<title>2.3-&gt;3.2</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M93.36,-116.99C92.9,-115.21 92.26,-112.67 91.57,-109.97"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="93.25,-109.48 90.32,-105.07 89.86,-110.35 93.25,-109.48"></polygon>
+</g>
+<!-- 2.4&#45;&gt;3.3 -->
+<g id="edge27" class="edge link">
+<title>2.4-&gt;3.3</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M122.43,-116.99C122.72,-115.3 123.12,-112.92 123.55,-110.38"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="125.34,-110.29 124.46,-105.07 121.89,-109.7 125.34,-110.29"></polygon>
+</g>
+<!-- 2.5&#45;&gt;3.4 -->
+<g id="edge28" class="edge link">
+<title>2.5-&gt;3.4</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M155.96,-116.99C156.67,-115.15 157.68,-112.5 158.75,-109.7"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="160.54,-109.94 160.69,-104.64 157.27,-108.69 160.54,-109.94"></polygon>
+</g>
+<!-- 2.6&#45;&gt;3.5 -->
+
+<!-- 1.1&#45;&gt;1.2 -->
+<g id="edge2" class="edge order">
+<title>1.1-&gt;1.2</title>
+<g id="a_edge2"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M118.05,-146C123.93,-146 129.81,-146 135.69,-146"></path>
+</a>
+</g>
+</g>
+<!-- 1.1&#45;&gt;2.1 -->
+<g id="edge18" class="edge link">
+<title>1.1-&gt;2.1</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M99.49,-140.51C96.22,-138.78 92.44,-136.8 89,-135 82.64,-131.68 75.4,-127.92 70.18,-125.21"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="70.98,-123.66 65.74,-122.91 69.37,-126.77 70.98,-123.66"></polygon>
+</g>
+<!-- 1.1&#45;&gt;2.3 -->
+<g id="edge19" class="edge link">
+<title>1.1-&gt;2.3</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M103.26,-137.04C101.68,-134.39 99.92,-131.44 98.37,-128.83"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="99.65,-127.56 95.59,-124.16 96.64,-129.35 99.65,-127.56"></polygon>
+</g><g id="edge35" class="edge link">
+<title>4.0-&gt;5.0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M11,-65.99C11,-64.55 11,-62.61 11,-60.49"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="12.75,-60.37 11,-55.37 9.25,-60.37 12.75,-60.37"></polygon>
+</g>
+<!-- 1.1&#45;&gt;2.4 -->
+<g id="edge20" class="edge link">
+<title>1.1-&gt;2.4</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M112.74,-137.04C114.32,-134.39 116.08,-131.44 117.63,-128.83"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="119.36,-129.35 120.41,-124.16 116.35,-127.56 119.36,-129.35"></polygon>
+</g><g id="edge36" class="edge link">
+<title>4.1-&gt;5.1</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M50,-65.99C50,-64.3 50,-61.92 50,-59.38"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="51.75,-59.07 50,-54.07 48.25,-59.07 51.75,-59.07"></polygon>
+</g><g id="edge37" class="edge link">
+<title>4.1-&gt;5.0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M47.44,-66.96C43.29,-64.46 34.76,-59.32 27,-54.64"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="27.49,-52.89 22.31,-51.81 25.69,-55.89 27.49,-52.89"></polygon>
+</g>
+<!-- 1.1&#45;&gt;2.5 -->
+<g id="edge21" class="edge link">
+<title>1.1-&gt;2.5</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M116.48,-140.46C119.75,-138.72 123.54,-136.74 127,-135 133.79,-131.58 141.6,-127.83 147.24,-125.15"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="148.27,-126.6 152.04,-122.88 146.77,-123.44 148.27,-126.6"></polygon>
+</g><g id="edge38" class="edge link">
+<title>4.2-&gt;5.2</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M88,-65.99C88,-64.3 88,-61.92 88,-59.38"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="89.75,-59.07 88,-54.07 86.25,-59.07 89.75,-59.07"></polygon>
+</g>
+<!-- 1.1&#45;&gt;2.6 -->
+<g id="edge39" class="edge link">
+<title>4.3-&gt;5.3</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M126,-65.99C126,-64.3 126,-61.92 126,-59.38"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="127.75,-59.07 126,-54.07 124.25,-59.07 127.75,-59.07"></polygon>
+</g>
+<!-- 3.1&#45;&gt;3.2 -->
+<g id="edge4" class="edge order">
+<title>3.1-&gt;3.2</title>
+<g id="a_edge4"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M60.09,-95C66.05,-95 72.01,-95 77.97,-95"></path>
+</a>
+</g>
+</g><g id="edge40" class="edge link">
+<title>4.4-&gt;5.4</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M164,-65.99C164,-64.3 164,-61.92 164,-59.38"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="165.75,-59.07 164,-54.07 162.25,-59.07 165.75,-59.07"></polygon>
+</g>
+<!-- 3.1&#45;&gt;F4 -->
+<g id="edge41" class="edge link">
+<title>4.5-&gt;5.5</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M203,-65.99C203,-64.55 203,-62.61 203,-60.49"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="204.75,-60.37 203,-55.37 201.25,-60.37 204.75,-60.37"></polygon>
+</g>
+<!-- 3.2&#45;&gt;3.3 -->
+<g id="edge5" class="edge order">
+<title>3.2-&gt;3.3</title>
+<g id="a_edge5"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M98.09,-95C104.05,-95 110.01,-95 115.97,-95"></path>
+</a>
+</g>
+</g>
+<!-- 3.2&#45;&gt;F3 -->
+
+<!-- 3.3&#45;&gt;3.4 -->
+<g id="edge6" class="edge order">
+<title>3.3-&gt;3.4</title>
+<g id="a_edge6"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M136.09,-95C142.05,-95 148.01,-95 153.97,-95"></path>
+</a>
+</g>
+</g>
+<!-- 3.3&#45;&gt;F2 -->
+
+<!-- 3.4&#45;&gt;3.5 -->
+<g id="edge7" class="edge order">
+<title>3.4-&gt;3.5</title>
+<g id="a_edge7"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M174.05,-95C179.93,-95 185.81,-95 191.69,-95"></path>
+</a>
+</g>
+</g>
+<!-- 3.4&#45;&gt;F1 -->
+<g id="edge30" class="edge link">
+<title>3.1-&gt;4.1</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M50,-84.98C50,-82.91 50,-80.72 50,-78.69"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="51.75,-78.33 50,-73.33 48.25,-78.33 51.75,-78.33"></polygon>
+</g>
+<!-- 3.5&#45;&gt;3.6 -->
+
+<!-- 3.5&#45;&gt;F0 -->
+<g id="edge31" class="edge link">
+<title>3.2-&gt;4.2</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M88,-84.98C88,-82.91 88,-80.72 88,-78.69"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="89.75,-78.33 88,-73.33 86.25,-78.33 89.75,-78.33"></polygon>
+</g>
+<!-- 1.0 -->
+<g id="node1" class="node observer">
+<title>1.0</title>
+<polygon fill="white" stroke="grey" points="80,-157 58,-157 58,-135 80,-135 80,-157"></polygon>
+<text text-anchor="middle" x="69" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#595959">X</text>
+<use xlink:href="#obs" x="61" y="-154" width="16" height="16"></use></g>
+<!-- 3.0 -->
+<g id="node2" class="node observer">
+<title>3.0</title>
+<polygon fill="white" stroke="grey" points="22,-106 0,-106 0,-84 22,-84 22,-106"></polygon>
+<text text-anchor="middle" x="11" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#595959">X</text>
+<use xlink:href="#obs" x="3" y="-103" width="16" height="16"></use></g><g id="edge32" class="edge link">
+<title>3.3-&gt;4.3</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M126,-84.98C126,-82.91 126,-80.72 126,-78.69"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="127.75,-78.33 126,-73.33 124.25,-78.33 127.75,-78.33"></polygon>
+</g>
+<!-- 1.2 -->
+<!-- 1.2 -->
+<g id="node4" class="node environment">
+<title>1.2</title>
+<polygon fill="white" stroke="grey" points="158,-157 136,-157 136,-135 158,-135 158,-157"></polygon>
+<text text-anchor="middle" x="147" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#595959">E</text>
+<use xlink:href="#env" x="139" y="-154" width="16" height="16"></use></g>
+<!-- 3.6 -->
+
+<!-- 0.0 -->
+
+<!-- 5.5 -->
+<g id="node6" class="node environment">
+<title>5.5</title>
+<polygon fill="white" stroke="grey" points="214,-55 192,-55 192,-33 214,-33 214,-55"></polygon>
+<text text-anchor="middle" x="203" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#595959">E</text>
+<use xlink:href="#env" x="195" y="-52" width="16" height="16"></use></g>
+<!-- 0.0 -->
+<g id="node7" class="node event">
+<title>0.0</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="108" cy="-171.5" rx="3.5" ry="3.5"></ellipse>
+</g><g id="edge33" class="edge link">
+<title>3.4-&gt;4.4</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M164,-84.98C164,-82.91 164,-80.72 164,-78.69"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="165.75,-78.33 164,-73.33 162.25,-78.33 165.75,-78.33"></polygon>
+</g>
+<!-- 2.0 -->
+
+<!-- 2.0 -->
+<g id="node8" class="node event">
+<title>2.0</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="25" cy="-120.5" rx="3.5" ry="3.5"></ellipse>
+</g><g id="edge9" class="edge order">
+<title>5.1-&gt;5.2</title>
+<g id="a_edge9"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M60.09,-44C66.05,-44 72.01,-44 77.97,-44"></path>
+</a>
+</g>
+</g>
+<!-- 2.1 -->
+
+<!-- 2.1 -->
+<g id="node9" class="node event">
+<title>2.1</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="63" cy="-120.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 2.2 -->
+
+<!-- 2.2 -->
+<g id="node10" class="node event">
+<title>2.2</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="191" cy="-120.5" rx="3.5" ry="3.5"></ellipse>
+</g><g id="edge10" class="edge order">
+<title>5.2-&gt;5.3</title>
+<g id="a_edge10"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M98.09,-44C104.05,-44 110.01,-44 115.97,-44"></path>
+</a>
+</g>
+</g><g id="edge13" class="edge link">
+<title>5.1-&gt;F0</title>
+<path fill="none" stroke="grey" stroke-width="1.5" d="M50,-33.87C50,-31.78 50,-29.5 50,-27.23"></path>
+<polygon fill="grey" stroke="grey" stroke-width="1.5" points="51.75,-27.04 50,-22.04 48.25,-27.04 51.75,-27.04"></polygon>
+</g>
+<!-- 2.3 -->
+
+<!-- 2.3 -->
+<g id="node11" class="node event">
+<title>2.3</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="94" cy="-120.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 2.4 -->
+
+<!-- 2.4 -->
+<g id="node12" class="node event">
+<title>2.4</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="122" cy="-120.5" rx="3.5" ry="3.5"></ellipse>
+</g><g id="edge11" class="edge order">
+<title>5.3-&gt;5.4</title>
+<g id="a_edge11"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M136.09,-44C142.05,-44 148.01,-44 153.97,-44"></path>
+</a>
+</g>
+</g>
+<!-- 2.5 -->
+
+<!-- 2.5 -->
+<g id="node13" class="node event">
+<title>2.5</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="155" cy="-120.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 2.6 -->
+<g id="edge12" class="edge order">
+<title>5.4-&gt;5.5</title>
+<g id="a_edge12"><a xlink:title="Move">
+<path fill="none" stroke="transparent" stroke-width="20" d="M174.05,-44C179.93,-44 185.81,-44 191.69,-44"></path>
+</a>
+</g>
+</g>
+<!-- 1.1 -->
+
+<!-- 4.0 -->
+<g id="node14" class="node event">
+<title>4.0</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="11" cy="-69.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 4.1 -->
+<g id="node15" class="node event">
+<title>4.1</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="50" cy="-69.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 4.2 -->
+<g id="node16" class="node event">
+<title>4.2</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="88" cy="-69.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 4.3 -->
+<g id="node17" class="node event">
+<title>4.3</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="126" cy="-69.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 4.4 -->
+<g id="node18" class="node event">
+<title>4.4</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="164" cy="-69.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 4.5 -->
+<g id="node19" class="node event">
+<title>4.5</title>
+<ellipse fill="grey" stroke="grey" stroke-width="0" cx="203" cy="-69.5" rx="3.5" ry="3.5"></ellipse>
+</g>
+<!-- 1.1 -->
+<g id="node20" class="node token">
+<title>1.1</title>
+<ellipse fill="#b30000" stroke="white" stroke-width="0" cx="108" cy="-146" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="108" y="-143" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- 3.1 -->
+
+<!-- 3.1 -->
+<g id="node21" class="node token">
+<title>3.1</title>
+<ellipse fill="#fdd49e" stroke="white" stroke-width="0" cx="50" cy="-95" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="50" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">.25</text>
+</g>
+<!-- 3.2 -->
+
+<!-- 3.2 -->
+<g id="node22" class="node token">
+<title>3.2</title>
+<ellipse fill="#fdd49e" stroke="white" stroke-width="0" cx="88" cy="-95" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="88" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">.25</text>
+</g>
+<!-- 3.3 -->
+
+<!-- 3.3 -->
+<g id="node23" class="node token">
+<title>3.3</title>
+<ellipse fill="#fdd49e" stroke="white" stroke-width="0" cx="126" cy="-95" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="126" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">.25</text>
+</g><g id="node3" class="node observer">
+<title>5.0</title>
+<polygon fill="white" stroke="grey" points="22,-55 0,-55 0,-33 22,-33 22,-55"></polygon>
+<text text-anchor="middle" x="11" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#595959">X</text>
+<use xlink:href="#obs" x="3" y="-52" width="16" height="16"></use></g>
+
+<!-- 3.4 -->
+<g id="node24" class="node token">
+<title>3.4</title>
+<ellipse fill="#fdd49e" stroke="white" stroke-width="0" cx="164" cy="-95" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="164" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">.25</text>
+</g>
+<!-- 3.5 -->
+<g id="node5" class="node environment">
+<title>3.5</title>
+<polygon fill="white" stroke="grey" points="214,-106 192,-106 192,-84 214,-84 214,-106"></polygon>
+<text text-anchor="middle" x="203" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#595959">E</text>
+<use xlink:href="#env" x="195" y="-103" width="16" height="16"></use></g>
+<!-- 5.1 -->
+<g id="node25" class="node token">
+<title>5.1</title>
+<ellipse fill="#b30000" stroke="white" stroke-width="0" cx="50" cy="-44" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="50" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">1</text>
+</g>
+<!-- 5.2 -->
+<g id="node26" class="node token">
+<title>5.2</title>
+<ellipse fill="#fef0d9" stroke="white" stroke-width="0" cx="88" cy="-44" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="88" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0</text>
+</g>
+<!-- 5.3 -->
+<g id="node27" class="node token">
+<title>5.3</title>
+<ellipse fill="#fef0d9" stroke="white" stroke-width="0" cx="126" cy="-44" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="126" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0</text>
+</g>
+<g id="node28" class="node token">
+<title>5.4</title>
+<ellipse fill="#fef0d9" stroke="white" stroke-width="0" cx="164" cy="-44" rx="10" ry="10"></ellipse>
+<text text-anchor="middle" x="164" y="-41" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">0</text>
+</g><g id="node29" class="node state">
+<title>F0</title>
+<polygon fill="#b30000" stroke="white" stroke-width="0" points="64.5,-22 35.5,-22 35.5,0 64.5,0 64.5,-22"></polygon>
+<text text-anchor="middle" x="50" y="-8" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">100%</text>
+</g></g>
+<defs>
+        <marker id="end-arrow" viewBox="0 -5 10 10" refX="6" markerWidth="3" markerHeight="3" orient="auto">
+          <path d="M0,-5L10,0L0,5" fill="gray"></path>
+        </marker>
+        <symbol id="obs" viewBox="0 0 24 24">
+          <rect x="0" y="0" width="24" height="24" fill="white"></rect>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="grey"></path>
+          <path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="grey"></path>
+        </symbol>
+        <symbol id="env" viewBox="0 0 24 24">
+          <rect x="0" y="0" width="24" height="24" fill="white"></rect>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="grey"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M11 0H13V4.06189C12.6724 4.02104 12.3387 4 12 4C11.6613 4 11.3276 4.02104 11 4.06189V0ZM7.0943 5.68018L4.22173 2.80761L2.80752 4.22183L5.6801 7.09441C6.09071 6.56618 6.56608 6.0908 7.0943 5.68018ZM4.06189 11H0V13H4.06189C4.02104 12.6724 4 12.3387 4 12C4 11.6613 4.02104 11.3276 4.06189 11ZM5.6801 16.9056L2.80751 19.7782L4.22173 21.1924L7.0943 18.3198C6.56608 17.9092 6.09071 17.4338 5.6801 16.9056ZM11 19.9381V24H13V19.9381C12.6724 19.979 12.3387 20 12 20C11.6613 20 11.3276 19.979 11 19.9381ZM16.9056 18.3199L19.7781 21.1924L21.1923 19.7782L18.3198 16.9057C17.9092 17.4339 17.4338 17.9093 16.9056 18.3199ZM19.9381 13H24V11H19.9381C19.979 11.3276 20 11.6613 20 12C20 12.3387 19.979 12.6724 19.9381 13ZM18.3198 7.0943L21.1923 4.22183L19.7781 2.80762L16.9056 5.6801C17.4338 6.09071 17.9092 6.56608 18.3198 7.0943Z" fill="grey"></path>
+        </symbol>
+      </defs></svg>

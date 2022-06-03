@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="7.4856262"
+   height="18.92042"
+   viewBox="0 0 5.6142197 14.190315"
+   version="1.1"
+   id="svg516"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g
+     id="edge37"
+     class="edge link"
+     transform="translate(-47.19289,65.990013)">
+    <path
+       fill="none"
+       stroke="#808080"
+       stroke-width="1.5"
+       d="m 50,-65.99 c 0,1.69 0,4.07 0,6.61"
+       id="path135" />
+    <polygon
+       fill="#808080"
+       stroke="#808080"
+       stroke-width="1.5"
+       points="51.75,-59.07 50,-54.07 48.25,-59.07 "
+       id="polygon137" />
+  </g>
+</svg>

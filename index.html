@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<head>
+  <title>BigraphQM</title>
+
+  <meta charset="utf-8">
+  <meta content="width=device-width, height=device-height, minimum-scale=1, initial-scale=1.0" name="viewport">
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta name="twitter:title" content="BigraphQM">
+  <meta name="twitter:description" content="Bipartite graph Quantum Mechanics">
+  <meta name="twitter:image" content="https://met4citizen.github.io/BigraphQM/screenshot.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+  html{ width:100%; height:100%; font-size: 10px; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.3px;}
+  body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1.5rem;  overflow: hidden; text-align: left; }
+  table { margin: 4px 0 0 0; border-collapse: collapse;}
+  td { vertical-align: top; width: auto; overflow-wrap:break-word; }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background-color: rgba(155, 155, 155, 0.5); border: transparent; }
+
+  #outer{ display: flex; position: absolute; top: 32px; left:0; right:0; bottom:0; margin:0; padding:0; background-color: lightblue;}
+  #bigraph{ flex: 1; margin: 2px 0 2px 2px; padding:0; overflow:scroll; vertical-align:top; text-align: center; scrollbar-color: rgba(155, 155, 155, 0.5) transparent; scrollbar-width: thin; border: 2px solid skyblue; background-color: white;}
+  #bigraph svg { margin: 30px 50px 200px 50px; }
+  #resizer{ flex: 0 0 2px; background-color: lightblue; border:0; margin:0; padding:0; pointer-events: none; }
+  #resizer:hover{cursor: ew-resize;}
+  #qm{ flex: 1; margin: 2px 2px 2px 0; padding:0; background-color: lightblue; border: 0; vertical-align:top; text-align: center; overflow:hidden; border: 2px solid skyblue; display:none;}
+  #text { margin:0; padding: 0; border: solid white; border-width: 0 0 0 10px; border-radius:0; resize: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; height:100%; font-family: "Courier",monospace; font-size:9px; line-height: 1.1rem; color:#404040; background-color: white; max-height: 100%; overflow: auto; text-align: left; white-space: pre-line; overflow-wrap: break-word; }
+
+  .toolkit { position: fixed; z-index: 3; opacity: 0.6; cursor: default; pointer-events: none;}
+  #topleft { top:0; left: 0; margin: 0 0 0 5px; padding: 2px; }
+  #topright { top:0; right: 0; margin: 0 10px 0 0; padding: 2px; }
+  .command, .setting { margin:0; padding:2px; display: inline-block; background-color: transparent; color: black; width: 16px; height: 16px; border: 0; border-radius: 3px; font-size: 10px; font-weight: bold; line-height:16px; text-align: center; vertical-align: middle; cursor: pointer; pointer-events: auto; }
+  .command svg, .setting svg { margin: 0; padding: 0; width: 16px; height: 16px; }
+  .title { color: steelblue; font-weight: bold; }
+  .title::before { content: ">> "; }
+  .subtitle { position: absolute; font-size: 6px; font-weight: bold; color: black; margin-top: 16px; margin-left: 8px; transform: translate(-50%,0);}
+  .subtitle2 { position: absolute; font-size: 6px; font-weight: bold; color: black; margin-top: 18px; margin-left: -2px; transform: translate(-50%,0); pointer-events: none;}
+  .vl { margin:0 5px; }
+  .command:active, .setting:active, .selected { background-color: black; color: white; }
+  .disabled { opacity: 0.2; pointer-events: none; }
+
+  .dragline { fill: none; stroke: gray; stroke-width: 1.2pt; cursor: none; pointer-events: none; }
+  .hidden { stroke-width: 0; }
+  .dragged { cursor: crosshair; }
+  a { cursor: pointer; pointer-events: auto; }
+
+  #logo { margin: 3px; padding: 3px; position: fixed; z-index: 3; opacity: 0.6; bottom: 0; left: 2px; }
+  #logo img { float:left; margin: 0; padding: 0; width: 32px; height: 32px; }
+  #logo a { display:inline-block; margin: 16px 0 0 5px; font-size: 8px; font-family: Geneva; color: grey;  }
+
+  .noselect { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+</style>
+
+<script nomodule>alert("You browser doesn't seem to support modules. Use a modern desktop browser to run BigraphQM.");</script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script src="https://unpkg.com/@hpcc-js/wasm@1.12.8/dist/index.min.js" type="javascript/worker"></script>
+<script src="https://unpkg.com/d3-graphviz@4.1.1/build/d3-graphviz.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script type="module">
+
+import { BigraphQMDOT } from './modules/BigraphQMDOT.mjs';
+const qm = new BigraphQMDOT();
+window.qm = qm; // TODO: REMOVE THIS AFTER DEBUGGING
+
+// Get URL parameters
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.href);
+    return results === null ? false : decodeURIComponent(results[1].replace(/\+/g, '    '));
+}
+
+// Global variables
+let scale = 1; // Zoom level
+let selected = []; // User selected titles
+let dragstart = null; // User adding a new edge by dragging
+let graphviz = null; // Graphviz engine
+let bigraphw = '66%'; // Initial graph window width
+let isEditMode =  getUrlParameter('edit') ? true : false; // True, if edit mode
+
+// Scale SVG based on current zoom level
+function attributer(datum, index, nodes) {
+  if (datum.tag == 'svg') {
+    const w = 4 * scale * datum.attributes.viewBox.split(' ')[2] / 3;
+    const h = 4 * scale * datum.attributes.viewBox.split(' ')[3] / 3;
+    datum.attributes = { ...datum.attributes, width: w+'px', height: h+'px' };
+  }
+}
+
+// The graphviz renderer has finished all actions
+function ready() {
+  // Add app specific SVG defs and symbols
+  let svg = d3.select('svg');
+  svg.append( () => d3.select('#svgdefs > defs').clone(true).node() );
+  svg.selectAll('.observer > text')
+    .each( function(d) {
+      d3.select(this.parentNode).append('svg:use')
+        .attr('xlink:href','#obs')
+        .attr('x', d.center.x - 8).attr('y', d.center.y - 11)
+        .attr('width', '16').attr('height', '16');
+    });
+  svg.selectAll('.environment > text')
+    .each( function(d) {
+      d3.select(this.parentNode).append('svg:use')
+        .attr('xlink:href','#env')
+        .attr('x', d.center.x - 8).attr('y', d.center.y - 11)
+        .attr('width', '16').attr('height', '16');
+    });
+
+  // Disable/enable editing
+  let isC = d3.select('#classical').classed('selected');
+  if ( isC ) {
+    // Disable
+    d3.selectAll('.observer,.token,.event,.environment')
+      .on('click dblclick mousedown mouseup',null);
+    d3.selectAll('.link').on('click dblclick', null);
+    d3.selectAll('.order').on('mouseup', null);
+  } else {
+    // Dragline
+    svg.insert('svg:path',':first-child')
+      .attr('class', 'dragline hidden')
+      .attr('d', 'M0,0L0,0');
+
+    // Enable
+    d3.selectAll('.observer,.token,.event,.environment')
+      .on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const title = d3.select(this).selectWithoutDataPropagation('title').text();
+        if ( e.shiftKey ) {
+          if ( selected.includes(title) ) {
+            selected.splice( selected.indexOf(title), 1);
+          } else {
+            selected.push(title);
+          }
+        } else {
+          if ( selected.length === 1 && selected[0]===title ) {
+            selected.length = 0;
+          } else {
+            selected.length = 0;
+            selected.push(title);
+          }
+        }
+        if( e.detail === 1) render(false); // Render only is single click
+      })
+      .on('dblclick', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const title = d3.select(this).selectWithoutDataPropagation('title').text();
+        const v = qm.v( title );
+        if (v) qm.addBranch(v);
+        render();
+      })
+      .on('mousedown', function(e,d) {
+        e.preventDefault();
+        e.stopPropagation();
+        if ( e.button == 0 ) {
+          let title = d3.select(this).selectWithoutDataPropagation('title').text();
+          let svg = d3.select('svg');
+          let x = d3.pointer(e,svg.node())[0];
+          let y = d3.pointer(e,svg.node())[1];
+          d3.select('.dragline')
+            .style('marker-end', 'url(#end-arrow)')
+            .classed('hidden', false)
+            .attr('d', `M${x},${y}L${x},${y}`);
+          dragstart = { title: title, x: x, y: y };
+          svg.on('mousemove', function(e,d) {
+            if (dragstart) {
+              d3.select('.dragline')
+                .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e)[0]},${d3.pointer(e)[1]}`);
+            }
+          })
+          .on('mouseup mouseleave', function(e,d) {
+            d3.select('.dragline').classed('hidden', true);
+            dragstart = null;
+            d3.select(this)
+              .on('mousemove mouseup mouseleave', null);
+            d3.select('svg').classed('dragged',false);
+          })
+          .classed('dragged',true);
+        }
+      })
+      .on('mouseup', function(e,d) {
+        if (dragstart && e.button == 0) {
+          let title = d3.select(this).selectWithoutDataPropagation('title').text();
+          d3.select('.dragline').style('marker-end', '').classed('hidden', true);
+          const v1 = qm.v(dragstart.title);
+          const v2 = qm.v(title);
+          if ( v1 && v2 && v1 !== v2 ) {
+            if ( qm.isEdge(v1,v2) ) {
+              qm.delEdge(v1,v2);
+            } else {
+              qm.addEdge(v1,v2);
+            }
+          }
+          dragstart = null;
+          d3.select('svg').classed('dragged',false);
+          render();
+        }
+      });
+
+      // Ordering
+      d3.selectAll('.order').on('mouseup', function(e,d) {
+        if (dragstart && e.button == 0) {
+          let titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
+          d3.select('.dragline').style('marker-end', '').classed('hidden', true);
+          const vfrom = qm.v(dragstart.title);
+          const vto = qm.v(titles[ (d3.pointer(e)[0]>dragstart.x ? 0 : 1) ]);
+          if ( vfrom && vto && vfrom !== vto && vfrom.time === vto.time ) {
+            qm.move(vfrom,vto);
+          }
+          dragstart = null;
+          d3.select('svg').classed('dragged',false);
+          render();
+        }
+      });
+
+      d3.selectAll('.link')
+        .on('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
+          selected.length = 0;
+          selected.push( ...titles );
+          render(false);
+        })
+        .on('dblclick', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
+          const [vtail,vhead] = titles.map( x => qm.v(x) );
+          if ( vtail && vhead ) qm.delEdge(vtail,vhead);
+          selected.length = 0;
+          render();
+        });
+    }
+}
+
+// Reader graph
+// If changed=true, update localStorage backup
+function render( changed=true ) {
+  // Disable/enable editor tools
+  let isC = d3.select('#classical').classed('selected');
+  let l = selected.length;
+  d3.select('#undo').classed('disabled',qm.UNDO.length == 0);
+  d3.select('#redo').classed('disabled',qm.REDO.length == 0);
+  d3.select('#dectime').classed('disabled', isC || qm.time <= qm.inittime);
+  d3.select('#inctime').classed('disabled', isC );
+  d3.select('#addbranch').classed('disabled',
+    isC || l != 1 || !qm.isAllowedBranch(qm.v( selected[0] ) )
+  );
+  d3.select('#del').classed('disabled',
+    isC || l==0 || l>2 || (l == 1 && !qm.branch( qm.v( selected[0]) ).length) ||
+    (l == 2 && !qm.isEdge( qm.v( selected[0] ), qm.v( selected[1] ) ) )
+  );
+
+  try {
+    // Make a backup of the current graph
+    let g = qm.export();
+    if ( changed ) {
+      localStorage.setItem('g', g);
+    }
+
+    let dot = '';
+    let isC = d3.select('#classical').classed('selected');
+    if ( isC ) {
+      dot = qm.dotC(); // Classical states
+    } else {
+      if ( dragstart ) {
+        dot = qm.dotQ([ dragstart.title ]); // Quantum states (editor mode)
+      } else {
+        dot = qm.dotQ(selected); // Quantum states (editor mode)
+      }
+    }
+
+    // Status
+    let txt = '';
+    qm.status(selected).forEach( (x,i) =>
+      txt += (i?'\n':'')+'\n<span class="title">'+x.title+'</span>\n'+x.text );
+    let url = window.location.href.split('?')[0] +
+      (g ? '?g=' + encodeURIComponent(g) : '');
+    txt += '\n\n<span class="title">URL</span>\n' + url;
+    txt += '\n\n<span class="title">DOT</span>\n' + dot;
+    d3.select('#text').html( txt );
+
+    // Typeset Math
+    if (window.MathJax) {
+      let mathNode = document.getElementById('text');
+      MathJax.typesetClear([ mathNode ]);
+      MathJax.typeset([ mathNode ]);
+    }
+
+    // Render
+    graphviz.renderDot(dot);
+  }
+  catch(ex) {
+    console.log(ex);
+    alert(ex);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(e) {
+
+  // Graphviz engine
+  graphviz = d3.select('#bigraph').graphviz()
+      .scale(1)
+      .fit(false)
+      .zoom(false)
+      .fade(false)
+      .tweenShapes(false)
+      .tweenPaths(false)
+      .attributer(attributer)
+      .onerror((ex) => {
+        console.log(ex);
+        alert(ex);
+      })
+      .on('end', ready);
+
+  // Click outside the graph, clear all previous selections
+  d3.select('#bigraph').on('click', function(e) {
+    if ( selected.length ) {
+      selected.length = 0;
+      render(false);
+    }
+  });
+
+  // Resize info window width
+  d3.select('#resizer').on('mousedown', function(e) {
+    d3.select(document).on('mousemove', function(e) {
+      let p = 100 * e.pageX / window.innerWidth;
+      if ( p >= 20 && p < 80 ) {
+        d3.select('#bigraph').style('flex-basis',p+'%');
+      }
+    });
+    d3.select(document).on('mouseup', function(e) {
+      d3.select(document).on('mouseup mousemove', null);
+    });
+  });
+
+  // Zoom in
+  d3.select('#zin').on('click', function(e) {
+    scale += 0.1;
+    if ( scale >= 2 ) d3.select('#zin').classed('disabled',true);
+    d3.select('#zout').classed('disabled',false);
+    render(false);
+  });
+
+  // Zoom out
+  d3.select('#zout').on('click', function(e) {
+    scale -= 0.1;
+    if ( scale <= 0.2 ) d3.select('#zout').classed('disabled',true);
+    d3.select('#zin').classed('disabled',false);
+    render(false);
+  });
+
+  // Undo
+  d3.select('#undo').on('click', function(e) {
+    qm.undo();
+    selected.length = 0;
+    render();
+  });
+
+  // Redo
+  d3.select('#redo').on('click', function(e) {
+    qm.redo();
+    selected.length = 0;
+    render();
+  });
+
+  // Add a new time step
+  d3.select('#inctime').on('click', function(e) {
+    qm.incTime();
+    selected.length = 0;
+    render();
+  });
+
+  // Remove the latest time step
+  d3.select('#dectime').on('click', function(e) {
+    qm.decTime();
+    selected.length = 0;
+    render();
+  });
+
+  // Add a new branch
+  d3.select('#addbranch').on('click', function(e) {
+    if ( selected.length ) {
+      const v = qm.v(selected[0]);
+      if (v) qm.addBranch(v);
+      selected.length = 0;
+    }
+    render();
+  });
+
+  // Delete the selected branch/edge
+  d3.select('#del').on('click', function(e) {
+    if ( selected.length === 1 ) {
+      const v = qm.v(selected[0]);
+      if (v) qm.delBranch(v);
+    } else if ( selected.length === 2 ) {
+      const v1 = qm.v(selected[0]), v2 = qm.v(selected[1]);
+      if (v1 && v2) qm.delEdge(v1,v2);
+    }
+    selected.length = 0;
+    render();
+  });
+
+  // Make a proto-measurement
+  d3.select('#measure').on('click', function(e) {
+    qm.measure();
+    render();
+  });
+
+  // Add decoherence to the system
+  d3.select('#decohere').on('click', function(e) {
+    qm.decohere();
+    render();
+  });
+
+  // Toggle settings
+  d3.selectAll('.setting').on('click', function(e) {
+    let on = !d3.select(this).classed('selected');
+    d3.select(this).classed('selected', on);
+    switch( d3.select(this).attr('id') ) {
+      case 'info':
+        if (on) {
+          d3.select('#qm').style('display','inline-block');
+          d3.select('#resizer').style('pointer-events','auto');
+          d3.select('#bigraph').style('flex','0 0 ' + bigraphw);
+        } else {
+          bigraphw = d3.select('#bigraph').style('flex-basis');
+          d3.select('#qm').style('display','none');
+          d3.select('#resizer').style('pointer-events','none');
+          d3.select('#bigraph').style('flex','1');
+        }
+        break;
+
+      case 'classical':
+        if (on) {
+          selected.length = 0;
+        }
+        render(false);
+        break;
+    }
+  });
+
+  // Open project's GitHub page
+  d3.select('#github').on('click', function(e) {
+    window.open('https://github.com/met4citizen/BigraphQM','_blank');
+  });
+
+  // Copy URL link for the current graph to clipboard
+  d3.select('#url').on('click', function(e) {
+    if (navigator.clipboard) {
+      let url = window.location.href.split('?')[0] + '?g=' + qm.export();
+      navigator.clipboard.writeText(url).then(function() {
+        alert( 'The URL copied to clipboard.' );
+      }, function(err) {
+        alert( 'Sorry, something went wrong.\nPlease open the info box and copy the URL manually.');
+      });
+    } else {
+      alert( 'Sorry, clipboard not available.\nPlease open the info box and copy the URL manually.');
+    }
+  });
+
+  // Download the graph as a SVG file
+  d3.select('#svg').on('click', function(e) {
+    var svgData = d3.select('#bigraph').node().innerHTML;
+    var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+    var svgBlob = new Blob([preface,svgData], {type:'image/svg+xml;charset=utf-8'});
+    var svgUrl = URL.createObjectURL(svgBlob);
+    var downloadLink = document.createElement('a');
+    downloadLink.href = svgUrl;
+    downloadLink.download = 'bigraphqm.svg';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  });
+
+  if ( isEditMode ) {
+    // Enable edit mode
+    d3.select('#text')
+      .attr('contenteditable', true)
+      .on('input', function(e) {
+        d3.select('#sync').classed('disabled', false);
+      });
+
+    // Enable sync functionality
+    d3.select('#sync')
+      .style('display','inline-block')
+      .style('visibility','visible')
+      .on('click', function(e) {
+        let dot = d3.select('#text').text();
+        let idx = dot.indexOf('digraph {');
+        if ( idx !== -1 ) {
+          try {
+            d3.select('#sync').classed('disabled', true);
+            graphviz.renderDot( dot.substring(idx) );
+          }
+          catch(ex) {
+            alert(ex);
+          }
+        }
+    });
+  }
+
+  // Initialize
+  qm.reset();
+
+  // If URL parameter g not set, use localStorage
+  let g = getUrlParameter('g') || localStorage.getItem('g');
+  if (g) {
+    try {
+      qm.import(g);
+    }
+    catch(ex) {
+      console.log(ex);
+      alert(ex);
+    }
+  }
+  render(false);
+
+});
+
+</script>
+</head>
+<body>
+  <div id="outer">
+    <div id="bigraph" class="noselect"></div>
+    <div id="resizer" class="noselect"></div>
+    <div id="qm">
+      <div id="text" spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <div id="topleft" class="toolkit noselect">
+    <span id="undo" class="command disabled" title="Undo"><svg viewBox="0 0 24 24" fill="none"><path d="M5.33929 4.46777H7.33929V7.02487C8.52931 6.08978 10.0299 5.53207 11.6607 5.53207C15.5267 5.53207 18.6607 8.66608 18.6607 12.5321C18.6607 16.3981 15.5267 19.5321 11.6607 19.5321C9.51025 19.5321 7.58625 18.5623 6.30219 17.0363L7.92151 15.8515C8.83741 16.8825 10.1732 17.5321 11.6607 17.5321C14.4222 17.5321 16.6607 15.2935 16.6607 12.5321C16.6607 9.77065 14.4222 7.53207 11.6607 7.53207C10.5739 7.53207 9.56805 7.87884 8.74779 8.46777L11.3393 8.46777V10.4678H5.33929V4.46777Z" fill="currentColor" /></svg></span>
+    <span class="subtitle2">UNDO</span>
+    <span id="redo" class="command disabled" title="Redo"><svg viewBox="0 0 24 24" fill="none"><path d="M13.1459 11.0499L12.9716 9.05752L15.3462 8.84977C14.4471 7.98322 13.2242 7.4503 11.8769 7.4503C9.11547 7.4503 6.87689 9.68888 6.87689 12.4503C6.87689 15.2117 9.11547 17.4503 11.8769 17.4503C13.6977 17.4503 15.2911 16.4771 16.1654 15.0224L18.1682 15.5231C17.0301 17.8487 14.6405 19.4503 11.8769 19.4503C8.0109 19.4503 4.87689 16.3163 4.87689 12.4503C4.87689 8.58431 8.0109 5.4503 11.8769 5.4503C13.8233 5.4503 15.5842 6.24474 16.853 7.52706L16.6078 4.72412L18.6002 4.5498L19.1231 10.527L13.1459 11.0499Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span id="zin" class="command" title="Zoom in"><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.3431 15.2426C17.6863 12.8995 17.6863 9.1005 15.3431 6.75736C13 4.41421 9.20101 4.41421 6.85786 6.75736C4.51472 9.1005 4.51472 12.8995 6.85786 15.2426C9.20101 17.5858 13 17.5858 15.3431 15.2426ZM16.7574 5.34315C19.6425 8.22833 19.8633 12.769 17.4195 15.9075C17.4348 15.921 17.4498 15.9351 17.4645 15.9497L21.7071 20.1924C22.0976 20.5829 22.0976 21.2161 21.7071 21.6066C21.3166 21.9971 20.6834 21.9971 20.2929 21.6066L16.0503 17.364C16.0356 17.3493 16.0215 17.3343 16.008 17.319C12.8695 19.7628 8.32883 19.542 5.44365 16.6569C2.31946 13.5327 2.31946 8.46734 5.44365 5.34315C8.56785 2.21895 13.6332 2.21895 16.7574 5.34315ZM10.1005 7H12.1005V10H15.1005V12H12.1005V15H10.1005V12H7.10052V10H10.1005V7Z" fill="currentColor" /></svg></span>
+    <span class="subtitle2">ZOOM</span>
+    <span id="zout" class="command" title="Zoom out"><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.3431 15.2426C17.6863 12.8995 17.6863 9.1005 15.3431 6.75736C13 4.41421 9.20101 4.41421 6.85786 6.75736C4.51472 9.1005 4.51472 12.8995 6.85786 15.2426C9.20101 17.5858 13 17.5858 15.3431 15.2426ZM16.7574 5.34315C19.6425 8.22833 19.8633 12.769 17.4195 15.9075C17.4348 15.921 17.4498 15.9351 17.4645 15.9497L21.7071 20.1924C22.0976 20.5829 22.0976 21.2161 21.7071 21.6066C21.3166 21.9971 20.6834 21.9971 20.2929 21.6066L16.0503 17.364C16.0356 17.3493 16.0215 17.3343 16.008 17.319C12.8695 19.7628 8.32883 19.542 5.44365 16.6569C2.31946 13.5327 2.31946 8.46734 5.44365 5.34315C8.56785 2.21895 13.6332 2.21895 16.7574 5.34315ZM7.10052 10V12H15.1005V10L7.10052 10Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span id="dectime" class="command disabled" title="Delete layer"><svg viewBox="0 0 24 24" fill="none"><path d="M18 17L10 12L18 7V17Z" fill="currentColor" /><path d="M6 7H9V17H6V7Z" fill="currentColor" /></svg></span>
+    <span class="subtitle2">TIME</span>
+    <span id="inctime" class="command" title="Add layer"><svg viewBox="0 0 24 24" fill="none"><path d="M6 17L14 12L6 7V17Z" fill="currentColor" /><path d="M18 7H15V12V17H18V7Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span class="vl"></span>
+    <span id="addbranch" class="command disabled" title="Add branch"><span class="subtitle">ADD</span><svg viewBox="0 0 24 24" fill="none" transform="rotate(90)"><path d="M18 9C19.6569 9 21 7.65685 21 6C21 4.34315 19.6569 3 18 3C16.3431 3 15 4.34315 15 6C15 6.12549 15.0077 6.24919 15.0227 6.37063L8.08261 9.84066C7.54305 9.32015 6.80891 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15C6.80891 15 7.54305 14.6798 8.08261 14.1593L15.0227 17.6294C15.0077 17.7508 15 17.8745 15 18C15 19.6569 16.3431 21 18 21C19.6569 21 21 19.6569 21 18C21 16.3431 19.6569 15 18 15C17.1911 15 16.457 15.3202 15.9174 15.8407L8.97733 12.3706C8.99229 12.2492 9 12.1255 9 12C9 11.8745 8.99229 11.7508 8.97733 11.6294L15.9174 8.15934C16.457 8.67985 17.1911 9 18 9Z" fill="currentColor" /></svg></span>
+    <span id="del" class="command disabled" title="Delete branch"><span class="subtitle">DEL</span><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M17 5V4C17 2.89543 16.1046 2 15 2H9C7.89543 2 7 2.89543 7 4V5H4C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7H5V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V7H20C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5H17ZM15 4H9V5H15V4ZM17 7H7V18C7 18.5523 7.44772 19 8 19H16C16.5523 19 17 18.5523 17 18V7Z" fill="currentColor" /><path d="M9 9H11V17H9V9Z" fill="currentColor" /><path d="M13 9H15V17H13V9Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span class="vl"></span>
+    <span id="measure" class="command" title="Measure"><span class="subtitle">MEASURE</span><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="currentColor" /><path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span class="vl"></span>
+    <span id="decohere" class="command" title="Decohere"><span class="subtitle">DECOHERE</span><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M11 0H13V4.06189C12.6724 4.02104 12.3387 4 12 4C11.6613 4 11.3276 4.02104 11 4.06189V0ZM7.0943 5.68018L4.22173 2.80761L2.80752 4.22183L5.6801 7.09441C6.09071 6.56618 6.56608 6.0908 7.0943 5.68018ZM4.06189 11H0V13H4.06189C4.02104 12.6724 4 12.3387 4 12C4 11.6613 4.02104 11.3276 4.06189 11ZM5.6801 16.9056L2.80751 19.7782L4.22173 21.1924L7.0943 18.3198C6.56608 17.9092 6.09071 17.4338 5.6801 16.9056ZM11 19.9381V24H13V19.9381C12.6724 19.979 12.3387 20 12 20C11.6613 20 11.3276 19.979 11 19.9381ZM16.9056 18.3199L19.7781 21.1924L21.1923 19.7782L18.3198 16.9057C17.9092 17.4339 17.4338 17.9093 16.9056 18.3199ZM19.9381 13H24V11H19.9381C19.979 11.3276 20 11.6613 20 12C20 12.3387 19.979 12.6724 19.9381 13ZM18.3198 7.0943L21.1923 4.22183L19.7781 2.80762L16.9056 5.6801C17.4338 6.09071 17.9092 6.56608 18.3198 7.0943Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span class="vl"></span>
+    <span id="classical" class="setting" title="Maximal cliques"><span class="subtitle">CLIQUES</span><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12ZM14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3C17.5915 3 22.2898 6.82432 23.6219 12C22.2898 17.1757 17.5915 21 12 21C6.40848 21 1.71018 17.1757 0.378052 12C1.71018 6.82432 6.40848 3 12 3ZM12 19C7.52443 19 3.73132 16.0581 2.45723 12C3.73132 7.94186 7.52443 5 12 5C16.4756 5 20.2687 7.94186 21.5428 12C20.2687 16.0581 16.4756 19 12 19Z" fill="currentColor" /></svg></span>
+  </div>
+
+  <div id="topright" class="toolkit noselect">
+    <span id="sync" class="command disabled" title="Run" style="display:none;visibility:hidden;"><span class="subtitle">DOT</span><svg viewBox="0 0 24 24" fill="none"><path d="M4.56079 10.6418L6.35394 3.94971L8.25402 5.84979C11.7312 3.6588 16.3814 4.07764 19.41 7.1063L17.9958 8.52052C15.7536 6.27827 12.3686 5.87519 9.71551 7.31128L11.2529 8.84869L4.56079 10.6418Z" fill="currentColor" /><path d="M19.4392 13.3581L17.646 20.0502L15.7459 18.1501C12.2688 20.3411 7.61857 19.9223 4.58991 16.8936L6.00413 15.4794C8.24638 17.7217 11.6313 18.1247 14.2844 16.6887L12.747 15.1512L19.4392 13.3581Z" fill="currentColor" /></svg></span>
+    <span id="info" class="setting" title="Information"><span class="subtitle">INFO</span><svg viewBox="0 0 24 24" fill="none"><path d="M13.325 3.05011L8.66741 20.4323L10.5993 20.9499L15.2568 3.56775L13.325 3.05011Z" fill="currentColor" /><path d="M7.61197 18.3608L8.97136 16.9124L8.97086 16.8933L3.87657 12.1121L8.66699 7.00798L7.20868 5.63928L1.04956 12.2017L7.61197 18.3608Z" fill="currentColor" /><path d="M16.388 18.3608L15.0286 16.9124L15.0291 16.8933L20.1234 12.1121L15.333 7.00798L16.7913 5.63928L22.9504 12.2017L16.388 18.3608Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span id="url" class="command" title="Copy URL"><span class="subtitle">URL</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.8284 12L16.2426 13.4142L19.071 10.5858C20.6331 9.02365 20.6331 6.49099 19.071 4.9289C17.509 3.3668 14.9763 3.3668 13.4142 4.9289L10.5858 7.75732L12 9.17154L14.8284 6.34311C15.6095 5.56206 16.8758 5.56206 17.6568 6.34311C18.4379 7.12416 18.4379 8.39049 17.6568 9.17154L14.8284 12Z" fill="currentColor" /><path d="M12 14.8285L13.4142 16.2427L10.5858 19.0711C9.02372 20.6332 6.49106 20.6332 4.92896 19.0711C3.36686 17.509 3.36686 14.9764 4.92896 13.4143L7.75739 10.5858L9.1716 12L6.34317 14.8285C5.56212 15.6095 5.56212 16.8758 6.34317 17.6569C7.12422 18.4379 8.39055 18.4379 9.1716 17.6569L12 14.8285Z" fill="currentColor" /><path d="M14.8285 10.5857C15.219 10.1952 15.219 9.56199 14.8285 9.17147C14.4379 8.78094 13.8048 8.78094 13.4142 9.17147L9.1716 13.4141C8.78107 13.8046 8.78107 14.4378 9.1716 14.8283C9.56212 15.2188 10.1953 15.2188 10.5858 14.8283L14.8285 10.5857Z" fill="currentColor" /></svg></span>
+    <span id="svg" class="command" title="Download SVG"><span class="subtitle">SVG</span><svg viewBox="0 0 24 24" fill="none"><path d="M11 5C11 4.44772 11.4477 4 12 4C12.5523 4 13 4.44772 13 5V12.1578L16.2428 8.91501L17.657 10.3292L12.0001 15.9861L6.34326 10.3292L7.75748 8.91501L11 12.1575V5Z" fill="currentColor" /><path d="M4 14H6V18H18V14H20V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V14Z" fill="currentColor" /></svg></span>
+    <span class="vl"></span>
+    <span id="github" class="command" title="GitHub"><span class="subtitle">GitHub</span><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z" fill="currentColor"/></svg></span>
+  </div>
+
+  <div id="logo" class="noselect">
+    <img src="data:image/png;base64,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" alt="" />
+  </div>
+
+  <div style="display:none;visibility:hidden;">
+    <svg id="svgdefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <marker id="end-arrow" viewBox="0 -5 10 10" refX="6" markerWidth="3" markerHeight="3" orient="auto">
+          <path d="M0,-5L10,0L0,5" fill="gray"/>
+        </marker>
+        <symbol id="obs" viewBox="0 0 24 24">
+          <rect x="0" y="0" width="24" height="24" fill="white"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="grey"/>
+          <path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="grey"/>
+        </symbol>
+        <symbol id="env" viewBox="0 0 24 24">
+          <rect x="0" y="0" width="24" height="24" fill="white" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="grey" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M11 0H13V4.06189C12.6724 4.02104 12.3387 4 12 4C11.6613 4 11.3276 4.02104 11 4.06189V0ZM7.0943 5.68018L4.22173 2.80761L2.80752 4.22183L5.6801 7.09441C6.09071 6.56618 6.56608 6.0908 7.0943 5.68018ZM4.06189 11H0V13H4.06189C4.02104 12.6724 4 12.3387 4 12C4 11.6613 4.02104 11.3276 4.06189 11ZM5.6801 16.9056L2.80751 19.7782L4.22173 21.1924L7.0943 18.3198C6.56608 17.9092 6.09071 17.4338 5.6801 16.9056ZM11 19.9381V24H13V19.9381C12.6724 19.979 12.3387 20 12 20C11.6613 20 11.3276 19.979 11 19.9381ZM16.9056 18.3199L19.7781 21.1924L21.1923 19.7782L18.3198 16.9057C17.9092 17.4339 17.4338 17.9093 16.9056 18.3199ZM19.9381 13H24V11H19.9381C19.979 11.3276 20 11.6613 20 12C20 12.3387 19.979 12.6724 19.9381 13ZM18.3198 7.0943L21.1923 4.22183L19.7781 2.80762L16.9056 5.6801C17.4338 6.09071 17.9092 6.56608 18.3198 7.0943Z" fill="grey" />
+        </symbol>
+      </defs>
+    </svg>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="30.666664"
+   height="30.666666"
+   viewBox="0 0 22.999998 23"
+   version="1.1"
+   id="svg516"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g
+     id="node3"
+     class="node observer"
+     transform="translate(0.5,55.5)">
+    <polygon
+       fill="#ffffff"
+       stroke="#808080"
+       points="0,-33 22,-33 22,-55 0,-55 "
+       id="polygon330" />
+    <text
+       text-anchor="middle"
+       x="11"
+       y="-41"
+       font-family="Helvetica, sans-Serif"
+       font-size="10px"
+       fill="#595959"
+       id="text332">X</text>
+    <use
+       xlink:href="#obs"
+       x="3"
+       y="-52"
+       width="16"
+       height="16"
+       id="use334" />
+  </g>
+  <defs
+     id="defs514">
+    <symbol
+       id="obs"
+       viewBox="0 0 24 24">
+      <rect
+         x="0"
+         y="0"
+         width="24"
+         height="24"
+         fill="#ffffff"
+         id="rect500" />
+      <path
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         d="m 16,7 c 0,2.20914 -1.7909,4 -4,4 C 9.79086,11 8,9.20914 8,7 8,4.79086 9.79086,3 12,3 c 2.2091,0 4,1.79086 4,4 z m -2,0 c 0,1.10457 -0.8954,2 -2,2 -1.1046,0 -2,-0.89543 -2,-2 0,-1.10457 0.8954,-2 2,-2 1.1046,0 2,0.89543 2,2 z"
+         fill="#808080"
+         id="path502" />
+      <path
+         d="m 16,15 c 0,-0.5523 -0.4477,-1 -1,-1 H 9 c -0.55228,0 -1,0.4477 -1,1 v 6 H 6 v -6 c 0,-1.6569 1.34315,-3 3,-3 h 6 c 1.6569,0 3,1.3431 3,3 v 6 h -2 z"
+         fill="#808080"
+         id="path504" />
+    </symbol>
+  </defs>
+</svg>
