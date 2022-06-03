@@ -504,7 +504,7 @@
 <polygon fill="#fdd49e" stroke="white" stroke-width="0" points="187.5,-22 158.5,-22 158.5,0 187.5,0 187.5,-22"></polygon>
 <text text-anchor="middle" x="173" y="-8" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">20%</text>
 </g>
-<!-- F2 -->
+<!-- F2  -->
 <g id="node31" class="node state">
 <title>F2</title>
 <polygon fill="#fdd49e" stroke="white" stroke-width="0" points="140.5,-22 111.5,-22 111.5,0 140.5,0 140.5,-22"></polygon>
