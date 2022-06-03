@@ -17,10 +17,9 @@ by using a variant of the
 The app uses [d3-graphviz](https://github.com/magjac/d3-graphviz) and
 [@hpcc-js/wasm](https://github.com/hpcc-systems/hpcc-js-wasm) for rendering
 graphs and [MathJax](https://github.com/mathjax/MathJax) for displaying
-LaTeX notation.
-
-The idea for the model, together with its interpretation, is a spin-off of
-my earlier project [Hypergraph](https://github.com/met4citizen/Hypergraph).
+LaTeX notation. The idea for the model, together with its interpretation,
+is a spin-off of my earlier project
+[Hypergraph](https://github.com/met4citizen/Hypergraph).
 
 
 ## Overview
@@ -54,9 +53,7 @@ that lead to each maximal clique is the probability of that outcome.
 
 Let $G$ be a directed bipartite graph with parts $V_{token}$ and $V_{event}$.
 
-$\displaystyle\qquad G= (V_{token} \cup V_{event}, E),$
-
-$\displaystyle\qquad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
+$\displaystyle\qquad G= (V_{token} \cup V_{event}, E),\quad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
 
 At each new step, the latest set of tokens $L_{token}$ is connected
 to a new set of events that produces the next generation of tokens.
@@ -159,10 +156,10 @@ TOOL| DESCRIPTION
 
 MODEL| DESCRIPTION
 :-: | :--
-<nobr>**Wave function collapse**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-collapse.svg" width=700/><br/>[URL](https://met4citizen.github.io/BigraphQM/?g=GiKSGgQECBIGgQIECBGwQIECB)|All events are local by definition. However, new edges can add shortcuts through the graph's ancestral structure and break some existing spacelike relations. These instantaneous and non-local effects are known as the [wave function collapse](https://en.wikipedia.org/wiki/Wave_function_collapse).
-<nobr>**Bell state (entanglement)**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-bellstate.svg" width=700/><br/>[URL](https://met4citizen.github.io/BigraphQM/?g=DiIkSIkIQjQiEQjQDMGJAjQECIBAg)|[Bell state](https://en.wikipedia.org/wiki/Bell_state) is an example of a maximally [entangled state](https://en.wikipedia.org/wiki/Quantum_entanglement). Here we start with two sequences $A$ and $B$. They both split into two inconsistent (orthogonal) branches. Lets call them $\lvert\uparrow\rangle$ and $\lvert\downarrow\rangle$. These branches get entangled so that the observer can only see either $\lvert\uparrow\downarrow\rangle$ or $\lvert\downarrow\uparrow\rangle$ - never $\lvert\uparrow\uparrow\rangle$ or $\lvert\downarrow\downarrow\rangle$.
-**Decoherence**<br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-decoherence.svg" width=700/><br/>[URL](https://met4citizen.github.io/BigraphQM/?g=DiI8SSRHgISIkKDAjwEBAQEBAQ)|[Decoherence](https://en.wikipedia.org/wiki/Quantum_decoherence) is a process in which the system interacts with its environment so that the overlap decreases and the states become separable.
-**Interference**<br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-interference.svg" width=700/><br/>[URL](https://met4citizen.github.io/BigraphQM/?g=DiI8SSRHgCAigkCAjwBARAQRAR4AgIgIAgI8AQEQMAQEeAICMCAYCPAEBGBAEBHgICAgICAjwEBAQEBAQ)|Two spacelike parts of the sample space can interact and thus [interfere](https://en.wikipedia.org/wiki/Wave_interference) with each other. This changes the probabilities over time and disturbs the [probability wave](https://en.wikipedia.org/wiki/Wave_function). This can be seen at measurement as an interference pattern. - Note: The shown example is the result of random interactions.
+<nobr>**Wave function collapse**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-collapse.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=GiKSGgQECBIGgQIECBGwQIECB)|All events are local by definition. However, new edges can add shortcuts through the graph's ancestral structure and break some existing spacelike relations. These instantaneous and non-local effects are known as the [wave function collapse](https://en.wikipedia.org/wiki/Wave_function_collapse).
+<nobr>**Bell state (entanglement)**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-bellstate.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiIkSIkIQjQiEQjQDMGJAjQECIBAg)|[Bell state](https://en.wikipedia.org/wiki/Bell_state) is an example of a maximally [entangled state](https://en.wikipedia.org/wiki/Quantum_entanglement). Here we start with two sequences $A$ and $B$. They both split into two inconsistent (orthogonal) branches. Lets call them $\lvert\uparrow\rangle$ and $\lvert\downarrow\rangle$. These branches get entangled so that the observer can only see either $\lvert\uparrow\downarrow\rangle$ or $\lvert\downarrow\uparrow\rangle$ - never $\lvert\uparrow\uparrow\rangle$ or $\lvert\downarrow\downarrow\rangle$.
+**Decoherence**<br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-decoherence.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiI8SSRHgISIkKDAjwEBAQEBAQ)|[Decoherence](https://en.wikipedia.org/wiki/Quantum_decoherence) is a process in which the system interacts with its environment so that the overlap decreases and the states become separable.
+**Interference**<br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-interference.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiI8SSRHgCAigkCAjwBARAQRAR4AgIgIAgI8AQEQMAQEeAICMCAYCPAEBGBAEBHgICAgICAjwEBAQEBAQ)|Two spacelike parts of the sample space can interact and thus [interfere](https://en.wikipedia.org/wiki/Wave_interference) with each other. This changes the probabilities over time and disturbs the [probability wave](https://en.wikipedia.org/wiki/Wave_function). This can be seen at measurement as an interference pattern. - Note: The shown example is the result of random interactions.
 
 
 ## Notes and Acknowledgements
@@ -180,6 +177,7 @@ Local Multiway Systems ([SetReplace](https://github.com/maxitg/SetReplace)).
 [Hypergraph](https://github.com/met4citizen/Hypergraph).
 - Many of the ideas were originally discussed with Tuomas Sorakivi.
 
+----
 
 ## Appendix A: The Born Rule
 
