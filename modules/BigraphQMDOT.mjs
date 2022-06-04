@@ -31,7 +31,7 @@ class BigraphQMDOT extends BigraphQM {
 
 		// Edge styles
 		this.styleEdge = 'edge [class=link penwidth=1.5 color=grey arrowhead=normal arrowsize=0.5 style=solid weight=1]';
-		this.styleOrdering = 'rank=same edge [class=order style=none arrowhead=none penwidth=12 color=transparent weight=10 edgetooltip="Move"]';
+		this.styleOrdering = 'rank=same edge [class=order style=none arrowhead=none penwidth=12 color=transparent weight=10]';
 
 		// Selection styles
 		this.styleSelBranch = 'penwidth=2 color=black';

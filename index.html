@@ -3,7 +3,7 @@
   <title>BigraphQM</title>
 
   <meta charset="utf-8">
-  <meta content="width=device-width, height=device-height, minimum-scale=1, initial-scale=1.0, user-scalable=no" name="viewport">
+  <meta content="width=device-width, height=device-height, minimum-scale=1, initial-scale=1.0, user-scalable=0" name="viewport">
 
   <link rel="icon" type="image/png" href="favicon.png">
 
@@ -14,7 +14,7 @@
 
   <style>
   html{ width:100%; height:100%; font-size: 10px; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.3px;}
-  body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1.5rem;  overflow: hidden; text-align: left; }
+  body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1.5rem;  overflow: hidden; text-align: left; touch-action: manipulation; }
   table { margin: 4px 0 0 0; border-collapse: collapse;}
   td { vertical-align: top; width: auto; overflow-wrap:break-word; }
 
@@ -129,7 +129,8 @@ function ready() {
     // Enable
     d3.selectAll('.observer,.token,.event,.environment')
       .on('click', function (e) {
-        // Stop click from propagating to prevent click on background
+        // NOTE: In order to support touch devices, click is implemented
+        // in mousedown/touchstart and mouseup/touchend events
         e.preventDefault();
         e.stopPropagation();
       })
@@ -142,9 +143,11 @@ function ready() {
         render();
       })
       .on('mousedown touchstart', function(e,d) {
+        e.preventDefault();
+        e.stopPropagation();
         let title = d3.select(this).selectWithoutDataPropagation('title').text();
         let svg = d3.select('svg');
-        if (e instanceof TouchEvent) e = e.touches[0];
+        if (window.TouchEvent && e instanceof TouchEvent) e = e.touches[0];
         let x = d3.pointer(e,svg.node())[0];
         let y = d3.pointer(e,svg.node())[1];
         d3.select('.dragline')
@@ -154,9 +157,10 @@ function ready() {
         dragstart = { title: title, x: x, y: y };
         svg.on('mousemove touchmove', function(e,d) {
           if (dragstart) {
-            if (e instanceof TouchEvent) e = e.touches[0];
+            e.preventDefault();
+            if (window.TouchEvent && e instanceof TouchEvent) e = e.changedTouches[0];
             d3.select('.dragline')
-              .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e)[0]},${d3.pointer(e)[1]}`);
+              .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e,this)[0]},${d3.pointer(e,this)[1]}`);
           }
         }, {passive: false})
         .on('mouseup touchend mouseleave touchcancel', function(e,d) {
@@ -170,42 +174,76 @@ function ready() {
       }, {passive: false})
       .on('mouseup touchend', function(e,d) {
         if (dragstart) {
-          const title = d3.select(this).selectWithoutDataPropagation('title').text();
-          d3.select('.dragline').style('marker-end', '').classed('hidden', true);
+          let title = null;
+          let isOrder = false;
+          if (window.TouchEvent && e instanceof TouchEvent) {
+            let loc = e.changedTouches[0];
+            let t = document.elementFromPoint(loc.clientX, loc.clientY);
+            if ( t ) {
+              let s = d3.select(t.parentNode);
+              if ( s.classed('observer') ||
+                s.classed('token') ||
+                s.classed('event') ||
+                s.classed('environment') ) {
+                title = s.selectWithoutDataPropagation('title').text();
+              } else if ( s.classed('order') ) {
+                let titles = s.selectWithoutDataPropagation('title').text().split('->');
+                let svg = d3.select('svg');
+                let x = d3.pointer(e.changedTouches[0],svg.node())[0];
+                title = titles[ (x>dragstart.x ? 0 : 1) ];
+                isOrder = true;
+              }
+            }
+          } else {
+            title = d3.select(this).selectWithoutDataPropagation('title').text();
+          }
+
           const v1 = qm.v(dragstart.title);
-          const v2 = qm.v(title);
-          if ( v1 && v2 ) {
-            if ( v1 == v2 ) {
-              if ( selected.includes(title) ) {
-                selected.splice( selected.indexOf(title), 1);
+          d3.select('.dragline').style('marker-end', '').classed('hidden', true);
+          dragstart = null;
+          d3.select('svg').classed('dragged',false);
+
+          if ( title ) {
+            const v2 = qm.v(title);
+            if ( v1 && v2 ) {
+              if ( isOrder ) {
+                if ( v1 !== v2 && v1.type == 1 && v1.time === v2.time ) {
+                  qm.move(v1,v2);
+                  render();
+                }
               } else {
-                selected.push(title);
+                if ( v1 == v2 ) {
+                  if ( selected.includes(title) ) {
+                    selected.splice( selected.indexOf(title), 1);
+                  } else {
+                    selected.push(title);
+                  }
+                  render(false);
+                } else {
+                  if ( qm.isEdge(v1,v2) ) {
+                    qm.delEdge(v1,v2);
+                  } else {
+                    qm.addEdge(v1,v2);
+                  }
+                  render();
+                }
               }
-              dragstart = null;
-              d3.select('svg').classed('dragged',false);
-              render(false);
-            } else {
-              if ( qm.isEdge(v1,v2) ) {
-                qm.delEdge(v1,v2);
-              } else {
-                qm.addEdge(v1,v2);
-              }
-              dragstart = null;
-              d3.select('svg').classed('dragged',false);
-              render();
             }
           }
         }
       }, {passive: false});
 
       // Ordering
-      d3.selectAll('.order').on('mouseup touchend', function(e,d) {
+      d3.selectAll('.order').on('mouseup', function(e,d) {
         if (dragstart) {
+          e.preventDefault();
+          e.stopPropagation();
           let titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
+          let x = d3.pointer(e,this)[0];
           d3.select('.dragline').style('marker-end', '').classed('hidden', true);
           const vfrom = qm.v(dragstart.title);
-          const vto = qm.v(titles[ (d3.pointer(e)[0]>dragstart.x ? 0 : 1) ]);
-          if ( vfrom && vto && vfrom !== vto && vfrom.time === vto.time ) {
+          const vto = qm.v(titles[ (x>dragstart.x ? 0 : 1) ]);
+          if ( vfrom && vto && vfrom !== vto && vfrom.type == 1 && vfrom.time === vto.time ) {
             qm.move(vfrom,vto);
           }
           dragstart = null;
