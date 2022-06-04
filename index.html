@@ -3,7 +3,7 @@
   <title>BigraphQM</title>
 
   <meta charset="utf-8">
-  <meta content="width=device-width, height=device-height, minimum-scale=1, initial-scale=1.0" name="viewport">
+  <meta content="width=device-width, height=device-height, minimum-scale=1, initial-scale=1.0, user-scalable=no" name="viewport">
 
   <link rel="icon" type="image/png" href="favicon.png">
 
@@ -117,9 +117,9 @@ function ready() {
   if ( isC ) {
     // Disable
     d3.selectAll('.observer,.token,.event,.environment')
-      .on('click dblclick mousedown mouseup',null);
+      .on('click dblclick mousedown touchstart mouseup touchend',null);
     d3.selectAll('.link').on('click dblclick', null);
-    d3.selectAll('.order').on('mouseup', null);
+    d3.selectAll('.order').on('mouseup touchend', null);
   } else {
     // Dragline
     svg.insert('svg:path',':first-child')
@@ -156,7 +156,7 @@ function ready() {
         if (v) qm.addBranch(v);
         render();
       })
-      .on('mousedown', function(e,d) {
+      .on('mousedown touchstart', function(e,d) {
         e.preventDefault();
         e.stopPropagation();
         if ( e.button == 0 ) {
@@ -169,23 +169,23 @@ function ready() {
             .classed('hidden', false)
             .attr('d', `M${x},${y}L${x},${y}`);
           dragstart = { title: title, x: x, y: y };
-          svg.on('mousemove', function(e,d) {
+          svg.on('mousemove touchmove', function(e,d) {
             if (dragstart) {
               d3.select('.dragline')
                 .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e)[0]},${d3.pointer(e)[1]}`);
             }
-          })
-          .on('mouseup mouseleave', function(e,d) {
+          }, {passive: false})
+          .on('mouseup touchend mouseleave touchcancel', function(e,d) {
             d3.select('.dragline').classed('hidden', true);
             dragstart = null;
             d3.select(this)
-              .on('mousemove mouseup mouseleave', null);
+              .on('mousemove touchmove mouseup touchend mouseleave touchcancel', null);
             d3.select('svg').classed('dragged',false);
-          })
+          }, {passive: false})
           .classed('dragged',true);
         }
-      })
-      .on('mouseup', function(e,d) {
+      }, {passive: false})
+      .on('mouseup touchend', function(e,d) {
         if (dragstart && e.button == 0) {
           let title = d3.select(this).selectWithoutDataPropagation('title').text();
           d3.select('.dragline').style('marker-end', '').classed('hidden', true);
@@ -202,10 +202,10 @@ function ready() {
           d3.select('svg').classed('dragged',false);
           render();
         }
-      });
+      }, {passive: false});
 
       // Ordering
-      d3.selectAll('.order').on('mouseup', function(e,d) {
+      d3.selectAll('.order').on('mouseup touchend', function(e,d) {
         if (dragstart && e.button == 0) {
           let titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
           d3.select('.dragline').style('marker-end', '').classed('hidden', true);
@@ -218,7 +218,7 @@ function ready() {
           d3.select('svg').classed('dragged',false);
           render();
         }
-      });
+      }, {passive: false});
 
       d3.selectAll('.link')
         .on('click', function (e) {
@@ -330,17 +330,17 @@ document.addEventListener('DOMContentLoaded', function(e) {
   });
 
   // Resize info window width
-  d3.select('#resizer').on('mousedown', function(e) {
-    d3.select(document).on('mousemove', function(e) {
+  d3.select('#resizer').on('mousedown touchstart', function(e) {
+    d3.select(document).on('mousemove touchmove', function(e) {
       let p = 100 * e.pageX / window.innerWidth;
       if ( p >= 20 && p < 80 ) {
         d3.select('#bigraph').style('flex-basis',p+'%');
       }
     });
-    d3.select(document).on('mouseup', function(e) {
-      d3.select(document).on('mouseup mousemove', null);
-    });
-  });
+    d3.select(document).on('mouseup mouseleave touchend touchcancel', function(e) {
+      d3.select(document).on('mouseup mouseleave touchend mousemove touchmove touchcancel', null);
+    }, {passive: false});
+  }, {passive: false});
 
   // Zoom in
   d3.select('#zin').on('click', function(e) {
