@@ -144,6 +144,7 @@ function ready() {
       .on('mousedown touchstart', function(e,d) {
         let title = d3.select(this).selectWithoutDataPropagation('title').text();
         let svg = d3.select('svg');
+        if (e instanceof TouchEvent) e = e.touches[0];
         let x = d3.pointer(e,svg.node())[0];
         let y = d3.pointer(e,svg.node())[1];
         d3.select('.dragline')
@@ -153,6 +154,7 @@ function ready() {
         dragstart = { title: title, x: x, y: y };
         svg.on('mousemove touchmove', function(e,d) {
           if (dragstart) {
+            if (e instanceof TouchEvent) e = e.touches[0];
             d3.select('.dragline')
               .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e)[0]},${d3.pointer(e)[1]}`);
           }
