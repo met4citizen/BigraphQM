@@ -142,8 +142,6 @@ function ready() {
         render();
       })
       .on('mousedown touchstart', function(e,d) {
-        e.preventDefault();
-        e.stopPropagation();
         let title = d3.select(this).selectWithoutDataPropagation('title').text();
         let svg = d3.select('svg');
         let x = d3.pointer(e,svg.node())[0];
@@ -201,8 +199,6 @@ function ready() {
       // Ordering
       d3.selectAll('.order').on('mouseup touchend', function(e,d) {
         if (dragstart) {
-          e.preventDefault();
-          e.stopPropagation();
           let titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
           d3.select('.dragline').style('marker-end', '').classed('hidden', true);
           const vfrom = qm.v(dragstart.title);
