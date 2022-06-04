@@ -126,8 +126,8 @@ SYMBOL| DESCRIPTION
 
 User Actions / Shortcuts:
 
-- Click on a token/event to select it. Hold down the shift key to select two or
-more tokens/events.
+- Click on a token/event to select it. Remove the selection by clicking on the
+background.
 - Double click on a token/event to add a new branch.
 - Drag a token/event on top of another event/token to connect the two with an
 edge. Only consistent (i.e. spacelike) connections are allowed.

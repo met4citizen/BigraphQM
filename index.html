@@ -117,7 +117,7 @@ function ready() {
   if ( isC ) {
     // Disable
     d3.selectAll('.observer,.token,.event,.environment')
-      .on('click dblclick mousedown touchstart mouseup touchend',null);
+      .on('dblclick mousedown touchstart mouseup touchend',null);
     d3.selectAll('.link').on('click dblclick', null);
     d3.selectAll('.order').on('mouseup touchend', null);
   } else {
@@ -129,24 +129,9 @@ function ready() {
     // Enable
     d3.selectAll('.observer,.token,.event,.environment')
       .on('click', function (e) {
+        // Stop click from propagating to prevent click on background
         e.preventDefault();
         e.stopPropagation();
-        const title = d3.select(this).selectWithoutDataPropagation('title').text();
-        if ( e.shiftKey ) {
-          if ( selected.includes(title) ) {
-            selected.splice( selected.indexOf(title), 1);
-          } else {
-            selected.push(title);
-          }
-        } else {
-          if ( selected.length === 1 && selected[0]===title ) {
-            selected.length = 0;
-          } else {
-            selected.length = 0;
-            selected.push(title);
-          }
-        }
-        if( e.detail === 1) render(false); // Render only is single click
       })
       .on('dblclick', function (e) {
         e.preventDefault();
@@ -159,54 +144,65 @@ function ready() {
       .on('mousedown touchstart', function(e,d) {
         e.preventDefault();
         e.stopPropagation();
-        if ( e.button == 0 ) {
-          let title = d3.select(this).selectWithoutDataPropagation('title').text();
-          let svg = d3.select('svg');
-          let x = d3.pointer(e,svg.node())[0];
-          let y = d3.pointer(e,svg.node())[1];
-          d3.select('.dragline')
-            .style('marker-end', 'url(#end-arrow)')
-            .classed('hidden', false)
-            .attr('d', `M${x},${y}L${x},${y}`);
-          dragstart = { title: title, x: x, y: y };
-          svg.on('mousemove touchmove', function(e,d) {
-            if (dragstart) {
-              d3.select('.dragline')
-                .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e)[0]},${d3.pointer(e)[1]}`);
-            }
-          }, {passive: false})
-          .on('mouseup touchend mouseleave touchcancel', function(e,d) {
-            d3.select('.dragline').classed('hidden', true);
-            dragstart = null;
-            d3.select(this)
-              .on('mousemove touchmove mouseup touchend mouseleave touchcancel', null);
-            d3.select('svg').classed('dragged',false);
-          }, {passive: false})
-          .classed('dragged',true);
-        }
+        let title = d3.select(this).selectWithoutDataPropagation('title').text();
+        let svg = d3.select('svg');
+        let x = d3.pointer(e,svg.node())[0];
+        let y = d3.pointer(e,svg.node())[1];
+        d3.select('.dragline')
+          .style('marker-end', 'url(#end-arrow)')
+          .classed('hidden', false)
+          .attr('d', `M${x},${y}L${x},${y}`);
+        dragstart = { title: title, x: x, y: y };
+        svg.on('mousemove touchmove', function(e,d) {
+          if (dragstart) {
+            d3.select('.dragline')
+              .attr('d', `M${dragstart.x},${dragstart.y}L${d3.pointer(e)[0]},${d3.pointer(e)[1]}`);
+          }
+        }, {passive: false})
+        .on('mouseup touchend mouseleave touchcancel', function(e,d) {
+          d3.select('.dragline').classed('hidden', true);
+          dragstart = null;
+          d3.select(this)
+            .on('mousemove touchmove mouseup touchend mouseleave touchcancel', null);
+          d3.select('svg').classed('dragged',false);
+        }, {passive: false})
+        .classed('dragged',true);
       }, {passive: false})
       .on('mouseup touchend', function(e,d) {
-        if (dragstart && e.button == 0) {
-          let title = d3.select(this).selectWithoutDataPropagation('title').text();
+        if (dragstart) {
+          const title = d3.select(this).selectWithoutDataPropagation('title').text();
           d3.select('.dragline').style('marker-end', '').classed('hidden', true);
           const v1 = qm.v(dragstart.title);
           const v2 = qm.v(title);
-          if ( v1 && v2 && v1 !== v2 ) {
-            if ( qm.isEdge(v1,v2) ) {
-              qm.delEdge(v1,v2);
+          if ( v1 && v2 ) {
+            if ( v1 == v2 ) {
+              if ( selected.includes(title) ) {
+                selected.splice( selected.indexOf(title), 1);
+              } else {
+                selected.push(title);
+              }
+              dragstart = null;
+              d3.select('svg').classed('dragged',false);
+              render(false);
             } else {
-              qm.addEdge(v1,v2);
+              if ( qm.isEdge(v1,v2) ) {
+                qm.delEdge(v1,v2);
+              } else {
+                qm.addEdge(v1,v2);
+              }
+              dragstart = null;
+              d3.select('svg').classed('dragged',false);
+              render();
             }
           }
-          dragstart = null;
-          d3.select('svg').classed('dragged',false);
-          render();
         }
       }, {passive: false});
 
       // Ordering
       d3.selectAll('.order').on('mouseup touchend', function(e,d) {
-        if (dragstart && e.button == 0) {
+        if (dragstart) {
+          e.preventDefault();
+          e.stopPropagation();
           let titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
           d3.select('.dragline').style('marker-end', '').classed('hidden', true);
           const vfrom = qm.v(dragstart.title);
