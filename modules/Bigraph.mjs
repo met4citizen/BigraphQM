@@ -321,7 +321,7 @@ class Bigraph {
 				const c = [];
 				vs.forEach( v => {
 					v.parent.forEach( p => {
-						c.push({ op: -2, tail: p.id, head: v.id });
+						c.push({ op: -2, tail: p.id, head: v.id, time: v.time });
 					});
 				});
 				vs.forEach( v => c.push({ op: -1, id: v.id, type: v.type, time: v.time }) );
@@ -428,7 +428,7 @@ class Bigraph {
 			const c = [];
 			vs.forEach( x => {
 				x.parent.forEach( y => {
-					c.push({ op: -2, tail: y.id, head: x.id });
+					c.push({ op: -2, tail: y.id, head: x.id, time: x.time });
 				});
 			});
 			vs.forEach( x => c.push({ op: -1, id: x.id, type: x.type, time: x.time }) );
@@ -455,7 +455,7 @@ class Bigraph {
 					x.child.forEach( y => {
 						let p = y.parent.filter(z => z != x);
 						if ( p.length && !this.isSpacelike([x],p) ) {
-							const c = { op: -2, tail: x.id, head: y.id };
+							const c = { op: -2, tail: x.id, head: y.id, time: y.time };
 							cs.push(c);
 							this.exec([c]);
 						}
@@ -505,7 +505,7 @@ class Bigraph {
 		if ( tail.time > head.time ) [tail,head] = [head,tail];
 
 		if ( this.isEdge(tail,head) && tail.child.length > 1 && head.parent.length > 1) {
-			let c = { op: -2, tail: tail.id, head: head.id };
+			let c = { op: -2, tail: tail.id, head: head.id, time: head.time };
 			cs.push(c);
 			this.exec([c]);
 
