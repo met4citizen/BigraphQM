@@ -25,7 +25,7 @@ class BigraphQMDOT extends BigraphQM {
 		// Type styles
 		this.styleObserver = 'node [class=observer shape=box fixedsize=true width=0.3 height=0.3 penwidth=1 fontname=Helvetica fontsize="10pt" fontcolor=grey35 color=grey style=filled fillcolor=white label="X"]';
 		this.styleEnvironment = 'node [class=environment label="E"]';
-		this.styleEvent = 'node [class=event shape=circle image="" width=0.1 height=0.1 penwidth=0 fillcolor=grey label=""]';
+		this.styleEvent = 'node [class=event shape=circle image="" width=0.14 height=0.14 penwidth=0 fillcolor=grey label=""]';
 		this.styleToken = 'node [class=token width=0.28 height=0.28 penwidth=0 color=white label="0" colorscheme=orrd6 fillcolor=1]';
 		this.styleState = 'node [class=state shape=box width=0.4 height=0.3 label="0" colorscheme=orrd6 fillcolor=1]';
 

@@ -3,7 +3,7 @@
   <title>BigraphQM</title>
 
   <meta charset="utf-8">
-  <meta content="width=device-width, height=device-height, minimum-scale=1, initial-scale=1.0, user-scalable=0" name="viewport">
+  <meta content="width=device-width, height=device-height, minimum-scale=1.0, initial-scale=1.0, user-scalable=no" name="viewport">
 
   <link rel="icon" type="image/png" href="favicon.png">
 
@@ -13,33 +13,33 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <style>
-  html{ width:100%; height:100%; font-size: 10px; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.3px;}
+  html{ width:100%; height:100%; font-size: 16px; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.3px;}
   body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1.5rem;  overflow: hidden; text-align: left; touch-action: manipulation; }
   table { margin: 4px 0 0 0; border-collapse: collapse;}
   td { vertical-align: top; width: auto; overflow-wrap:break-word; }
 
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background-color: rgba(155, 155, 155, 0.5); border: transparent; }
 
-  #outer{ display: flex; position: absolute; top: 32px; left:0; right:0; bottom:0; margin:0; padding:0; background-color: lightblue;}
+  #outer{ display: flex; position: absolute; top: 56px; left:0; right:0; bottom:0; margin:0; padding:0; background-color: lightblue;}
   #bigraph{ flex: 1; margin: 2px 0 2px 2px; padding:0; overflow:scroll; vertical-align:top; text-align: center; scrollbar-color: rgba(155, 155, 155, 0.5) transparent; scrollbar-width: thin; border: 2px solid skyblue; background-color: white;}
   #bigraph svg { margin: 30px 50px 200px 50px; }
-  #resizer{ flex: 0 0 2px; background-color: lightblue; border:0; margin:0; padding:0; pointer-events: none; }
+  #resizer{ flex: 0 0 4px; background-color: lightblue; border:0; margin:0; padding:0; pointer-events: none; }
   #resizer:hover{cursor: ew-resize;}
   #qm{ flex: 1; margin: 2px 2px 2px 0; padding:0; background-color: lightblue; border: 0; vertical-align:top; text-align: center; overflow:hidden; border: 2px solid skyblue; display:none;}
-  #text { margin:0; padding: 0; border: solid white; border-width: 0 0 0 10px; border-radius:0; resize: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; height:100%; font-family: "Courier",monospace; font-size:9px; line-height: 1.1rem; color:#404040; background-color: white; max-height: 100%; overflow: auto; text-align: left; white-space: pre-line; overflow-wrap: break-word; }
+  #text { margin:0; padding: 0; border: solid white; border-width: 0 0 0 10px; border-radius:0; resize: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; height:100%; font-family: "Courier",monospace; font-size:14px; line-height: 1.1rem; color:#404040; background-color: white; max-height: 100%; overflow: auto; text-align: left; white-space: pre-line; overflow-wrap: break-word; }
 
   .toolkit { position: fixed; z-index: 3; opacity: 0.6; cursor: default; pointer-events: none;}
-  #topleft { top:0; left: 0; margin: 0 0 0 5px; padding: 2px; }
-  #topright { top:0; right: 0; margin: 0 10px 0 0; padding: 2px; }
-  .command, .setting { margin:0; padding:2px; display: inline-block; background-color: transparent; color: black; width: 16px; height: 16px; border: 0; border-radius: 3px; font-size: 10px; font-weight: bold; line-height:16px; text-align: center; vertical-align: middle; cursor: pointer; pointer-events: auto; }
-  .command svg, .setting svg { margin: 0; padding: 0; width: 16px; height: 16px; }
+  #topleft { top:0; left: 0; margin: 0 0 0 5px; padding: 4px; }
+  #topright { top:0; right: 0; margin: 0 10px 0 0; padding: 4px; }
+  .command, .setting { margin:0; padding:2px; display: inline-block; background-color: transparent; color: black; width: 26px; height: 26px; border: 0; border-radius: 3px; font-size: 16px; font-weight: bold; line-height:26px; text-align: center; vertical-align: middle; cursor: pointer; pointer-events: auto; }
+  .command svg, .setting svg { margin: 0; padding: 0; width: 26px; height: 26px; }
   .title { color: steelblue; font-weight: bold; }
   .title::before { content: ">> "; }
-  .subtitle { position: absolute; font-size: 6px; font-weight: bold; color: black; margin-top: 16px; margin-left: 8px; transform: translate(-50%,0);}
-  .subtitle2 { position: absolute; font-size: 6px; font-weight: bold; color: black; margin-top: 18px; margin-left: -2px; transform: translate(-50%,0); pointer-events: none;}
-  .vl { margin:0 5px; }
+  .subtitle { position: absolute; font-size: 10px; font-weight: bold; color: black; margin-top: 26px; margin-left: 12px; transform: translate(-50%,0);}
+  .subtitle2 { position: absolute; font-size: 10px; font-weight: bold; color: black; margin-top: 30px; margin-left: -2px; transform: translate(-50%,0); pointer-events: none;}
+  .vl { margin:0 8px; }
   .command:active, .setting:active, .selected { background-color: black; color: white; }
   .disabled { opacity: 0.2; pointer-events: none; }
 
@@ -76,9 +76,11 @@ function getUrlParameter(name) {
 }
 
 // Global variables
-let scale = 1; // Zoom level
+let scale = 1.5; // Zoom level
 let selected = []; // User selected titles
 let dragstart = null; // User adding a new edge by dragging
+let lastTouched = null; // Used to implement double click in touch devices
+let lastTouch = null; // Used to implement double click in touch devices
 let graphviz = null; // Graphviz engine
 let bigraphw = '66%'; // Initial graph window width
 let isEditMode =  getUrlParameter('edit') ? true : false; // True, if edit mode
@@ -133,14 +135,6 @@ function ready() {
         // in mousedown/touchstart and mouseup/touchend events
         e.preventDefault();
         e.stopPropagation();
-      })
-      .on('dblclick', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const title = d3.select(this).selectWithoutDataPropagation('title').text();
-        const v = qm.v( title );
-        if (v) qm.addBranch(v);
-        render();
       })
       .on('mousedown touchstart', function(e,d) {
         e.preventDefault();
@@ -213,11 +207,16 @@ function ready() {
                 }
               } else {
                 if ( v1 == v2 ) {
-                  if ( selected.includes(title) ) {
+                  let now = new Date().getTime();
+                  if ( lastTouch && lastTouched == v1 && (now - lastTouch) < 300 ) {
+                    qm.addBranch(v1);
+                  } else if ( selected.includes(title) ) {
                     selected.splice( selected.indexOf(title), 1);
                   } else {
                     selected.push(title);
                   }
+                  lastTouched = v1;
+                  lastTouch = now;
                   render(false);
                 } else {
                   if ( qm.isEdge(v1,v2) ) {
@@ -257,18 +256,20 @@ function ready() {
           e.preventDefault();
           e.stopPropagation();
           const titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
-          selected.length = 0;
-          selected.push( ...titles );
-          render(false);
-        })
-        .on('dblclick', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          const titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
-          const [vtail,vhead] = titles.map( x => qm.v(x) );
-          if ( vtail && vhead ) qm.delEdge(vtail,vhead);
-          selected.length = 0;
-          render();
+          let now = new Date().getTime();
+          if ( lastTouch && lastTouched == titles.join(",") && (now - lastTouch) < 300 ) {
+            const v1 = qm.v( titles[0] );
+            const v2 = qm.v( titles[1] );
+            if ( v1 && v2 ) qm.delEdge(v1,v2);
+            selected.length = 0;
+            render();
+          } else {
+            lastTouched = titles.join(",");
+            lastTouch = now;
+            selected.length = 0;
+            selected.push( ...titles );
+            render(false);
+          }
         });
     }
 }
@@ -377,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
   // Zoom in
   d3.select('#zin').on('click', function(e) {
     scale += 0.1;
-    if ( scale >= 2 ) d3.select('#zin').classed('disabled',true);
+    if ( scale >= 3 ) d3.select('#zin').classed('disabled',true);
     d3.select('#zout').classed('disabled',false);
     render(false);
   });
