@@ -126,11 +126,11 @@ SYMBOL| DESCRIPTION
 
 User Actions / Shortcuts:
 
-- Click on a token/event to select it. Remove the selection by clicking on the
-background.
+- Click on a token/event to select it. Remove all the selections by clicking
+on the background.
 - Double click on a token/event to add a new branch.
 - Drag a token/event on top of another event/token to connect the two with an
-edge. Only consistent (i.e. spacelike) connections are allowed.
+edge. Note: Only consistent (i.e. spacelike) connections are allowed.
 - Drag a token to an empty space before or after another token to reorder the
 tokens.
 - Click on an edge to select it.
@@ -194,8 +194,8 @@ the complement of
 
 This approach links our model to the vector spaces and the Born rule.
 
-NOTE: The reason why the "distances" are squared in the Born rule is geometric.
-First, Kolmogorov's axioms tell us that the probabilities should
+NOTE: The reason why these "similarities" are squared in the Born rule is
+geometric. First, Kolmogorov's axioms tell us that the probabilities should
 add up to one. Second, as shown below, the sum of cosines squared equals
 to one in high dimensional vector spaces.
 
