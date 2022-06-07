@@ -59,6 +59,7 @@ class BigraphQM extends Bigraph {
 		return this.factorialCache[n];
 	}
 
+
 	/**
 	* Execute operation (override method).
 	* @param {Command[]} cs Command sequence
@@ -163,8 +164,20 @@ class BigraphQM extends Bigraph {
 			// Set measurement results
 			this.M1.set(t,{ omega: omega, f: f, p: p });
 
-			// TODO: METHOD #2
-
+			// METHOD #2
+			let n = omega.length;
+			let m = Array(n).fill().map( x => Array(n).fill(0) );
+			f.forEach( (x,k) => {
+				let l = x.length;
+				for(let i=0; i<l; i++) {
+					m[this.pos(x[i])-1][this.pos(x[i])-1] += p[k] * 1 / l;
+					for(let j=i+1; j<l; j++) {
+						m[this.pos(x[i])-1][this.pos(x[j])-1] += p[k] * 1 / l;
+						m[this.pos(x[j])-1][this.pos(x[i])-1] += p[k] * 1 / l;
+					}
+				}
+			});
+			this.M2.set(t,{ rho: m });
 		}
 		this.updatetime = this.time;
 	}
@@ -274,12 +287,31 @@ class BigraphQM extends Bigraph {
 		let s = [];
 		let ss = '';
 
-		// Final status
+		// Final status, method 1
 		let m = this.M1.get( this.time );
 		if ( m ) {
 			ss = 'Sample space:\n<table><tr><td>\\(\\quad\\Omega = \\)</td><td>{' + m.omega.map(x => this.pos(x)).join(',&#8203;') + '}</td></tr></table>';
 			ss += '\nCliques:\n<table><tr><td>\\(\\quad\\mathcal{F} = \\)</td><td>{' + m.f.map( x => '{'+x.map( y => this.pos(y) ).join(',&#8203;')+'}' ).join(',&#8203;') + '}</td></tr></table>';
 			ss += '\nProbabilities:\n<table><tr><td>\\(\\quad Pr = \\)</td><td>(' + m.p.map( x => this.round(x,2) ).join(',&#8203;')+')</td></tr></table>';
+		}
+
+		// Final status, method 2
+		m = this.M2.get( this.time );
+		if ( m ) {
+			ss += '\nDensity matrix:\n<table><tr><td>\\(\\quad\\rho = \\)</td><td>';
+			ss += '<table class="densitymatrix">';
+			m.rho.forEach( (x,i) => {
+				ss += '<tr>';
+				x.forEach( y => {
+					let v = this.round(y,2);
+					ss += '<td>' + ( (v==0 || v==1) ? v : v.toString().substring(1) ) + '</td>';
+				});
+				ss += '</tr>';
+			});
+			ss += '</table></td><tr></table>';
+		}
+
+		if ( ss.length ) {
 			s.push( { title: 'PROBABILITIES', text: ss }  );
 		}
 

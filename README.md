@@ -100,17 +100,33 @@ ALGORITHM BK(R, P, X) IS
         X := X ⋃ {v}
 ```
 
-The probability of an outcome $A$ is the proportion of all consistent
-sequences of interactions leading to that outcome.
+For each clique $\mathcal{F_1},\dots,\mathcal{F_m}$ there is a probability
+$p_1,\dots,p_m$ that is the proportion of all consistent sequences of
+interactions leading to that clique.
 
-$\displaystyle\qquad Pr(A)={{|A|!}\over{\underset{B\in \mathcal{F}}{\sum} |B|!}},\quad A\in \mathcal{F}$
+$\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k=1}^{m} |\mathcal{F_k}|!}},\quad j\in\{1,\dots,m\}$
+
+Let $|\phi_1\rangle,\dots,|\phi_n\rangle$ be standard basis vectors, one for
+each token $v_1,\dots,v_n$ in $\Omega$. The pure quantum state of each
+clique can be presented as a linear combination of these vectors.
+
+$\displaystyle\qquad |\psi_j\rangle = \frac{1}{\sqrt{|\mathcal{F_j}|}}\sum_{i=1}^{n}\mathbf{1}_\mathcal{F_j}{(v_i)}|\phi_i\rangle$
+
+*Note: See
+[Appendix A](#appendix-a-the-born-rule) for the explanation
+of the square root.*
+
+The density matrix $\rho$ is
+the weighted sum of the outer products of the pure states.
+
+$\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
 
 ## The Editor
 
 The bipartite graph on the app describes one possible set of consistent
 sequences relative to the observer. It doesn't follow sequences that have
-become inconsistent with the observer, because they can't interact.
+become inconsistent with the observer, because they can't interact with each other.
 
 To ensure consistency, **the editor only allows new edges between spacelike
 elements**.
@@ -186,18 +202,10 @@ a key postulate of quantum mechanics. It says that the absolute value of the
 vectors inner product, or equivalently the cosine squared of the angle
 between the lines the vectors span, corresponds to the transition probability.
 
-In our model, we can think of the tokens $v\in\Omega$ as basis vectors.
-Each $v$ added together with its neighbourhood $N(v)$ spans a ray in some
-high dimensional vector space. As a measure of "distance" we can then use
-the complement of
-[cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity).
-
-This approach links our model to the vector spaces and the Born rule.
-
-NOTE: The reason why these "similarities" are squared in the Born rule is
-geometric. First, Kolmogorov's axioms tell us that the probabilities should
-add up to one. Second, as shown below, the sum of cosines squared equals
-to one in high dimensional vector spaces.
+The reason why the cosines are squared in the Born rule is geometric.
+First, Kolmogorov's axioms tell us that the probabilities should add up to one.
+Second, as shown below, the sum of cosines squared equals to one in
+high dimensional vector spaces:
 
 Let $r$ be the length of a hypervector in $n$ dimensional space.
 
@@ -206,3 +214,7 @@ $\displaystyle\qquad r =\sqrt{x_1^2+x_2^2+\dots+x_n^2} \qquad \Bigg| \cdot ()^2 
 $\displaystyle\qquad 1 = \left({{x_1} \over r}\right)^2+\left({{x_2} \over r}\right)^2 + \dots + \left({{x_n} \over r}\right)^2$
 
 $\displaystyle\qquad 1 = cos^2 \theta_1 + cos^2 \theta_2 + \dots + cos^2 \theta_n \quad\square$
+
+This works both ways. So, if we want to move from classical probabilities to
+quantum probabilities - that is, from sets to vector spaces - we need to take
+square roots to get probability amplitudes.
