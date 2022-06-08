@@ -59,6 +59,32 @@ class BigraphQM extends Bigraph {
 		return this.factorialCache[n];
 	}
 
+	/**
+	* Parity of a permutation.
+	* @param {Object[]} p Permutation of (0,1,...,n)
+	* @return {number} Parity 1=even/-1=odd
+	*/
+	permutationParity(p) {
+		let sgn = 1;
+		const n = p.length;
+		const visited = Array(n).fill(false);
+		for(let k=0; k<n; k++) {
+			if (!visited[k]) { // k not visited, start a new cycle
+				let next = k;
+				let len = 0;
+				while( !visited[next] ) { // traverse the current cycle
+					len++;
+					visited[next] = true;
+					next = p[next];
+				}
+				if ( len % 2 === 0 ) { // if length of the cycle is even, change the sign
+					sgn = -sgn;
+				}
+			}
+		}
+		return sgn;
+	}
+
 
 	/**
 	* Execute operation (override method).
@@ -87,7 +113,7 @@ class BigraphQM extends Bigraph {
 	*    IF P and X are both empty THEN
 	*        report R as a maximal clique
 	*    choose a pivot vertex u in P ⋃ X
-	*    FOR each vertex v in P DO
+	*    FOR each vertex v in P \ N(u) DO
 	*        BK(R ⋃ {v}, P ⋂ N(v), X ⋂ N(v))
 	*        P := P \ {v}
 	*        X := X ⋃ {v}
@@ -298,7 +324,7 @@ class BigraphQM extends Bigraph {
 		// Final status, method 2
 		m = this.M2.get( this.time );
 		if ( m ) {
-			ss += '\nDensity matrix:\n<table><tr><td>\\(\\quad\\rho = \\)</td><td>';
+			ss += '\nDensity matrix:\n<table><tr><td class="vmiddle">\\(\\quad\\rho = \\)</td><td>';
 			ss += '<table class="densitymatrix">';
 			m.rho.forEach( (x,i) => {
 				ss += '<tr>';

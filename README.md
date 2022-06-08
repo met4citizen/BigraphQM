@@ -94,7 +94,7 @@ ALGORITHM BK(R, P, X) IS
     IF P and X are both empty THEN
         report R as a maximal clique
     choose a pivot vertex u in P ⋃ X
-    FOR each vertex v in P DO
+    FOR each vertex v in P \ N(u) DO
         BK(R ⋃ {v}, P ⋂ N(v), X ⋂ N(v))
         P := P \ {v}
         X := X ⋃ {v}
