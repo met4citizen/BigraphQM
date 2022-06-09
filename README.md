@@ -84,8 +84,12 @@ $\displaystyle\qquad N(v) = S(v)\cap \Omega,\quad v\in\Omega$
 
 The possible outcomes $\mathcal{F}$ are now this graph's maximal cliques.
 The clique problem is NP-complete, but typically solvable within our sample
-space sizes. In the app we use a variant of the Bron-Kerbosch algorithm
-with the worst-case time complexity $O(3^{n\over 3})$.
+space sizes.
+
+In the app we use a variant of the Bron-Kerbosch algorithm
+with the worst-case time complexity $O(3^{n\over 3})$ and for
+[$k$-degenerate graphs](https://en.wikipedia.org/wiki/Degeneracy_%28graph_theory%29)
+$O(kn3^\frac{k}{3})$.
 
 $\displaystyle\qquad\mathcal{F} = \mathbf{BK}(\varnothing,\Omega,\varnothing)$
 
@@ -106,18 +110,15 @@ interactions leading to that clique.
 
 $\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k=1}^{m} |\mathcal{F_k}|!}},\quad j\in\{1,\dots,m\}$
 
-Let $|\phi_1\rangle,\dots,|\phi_n\rangle$ be standard basis vectors, one for
-each token $v_1,\dots,v_n$ in $\Omega$. The pure quantum state of each
-clique can be presented as a linear combination of these vectors.
+The pure quantum state of each clique can be presented as a linear combination
+of orthonormal vectors $|\phi_1\rangle,\dots,|\phi_n\rangle$ representing
+tokens $v_1,\dots,v_n$ in $\Omega$. The square root left to the sum is the
+[normalizing constant](https://en.wikipedia.org/wiki/Normalizing_constant).
 
 $\displaystyle\qquad |\psi_j\rangle = \frac{1}{\sqrt{|\mathcal{F_j}|}}\sum_{i=1}^{n}\mathbf{1}_\mathcal{F_j}{(v_i)}|\phi_i\rangle$
 
-*Note: See
-[Appendix A](#appendix-a-the-born-rule) for the explanation
-of the square root.*
-
-The density matrix $\rho$ is
-the weighted sum of the outer products of the pure states.
+The density matrix $\rho$ is the weighted sum of the outer products of
+the pure states.
 
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
@@ -126,7 +127,8 @@ $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
 The bipartite graph on the app describes one possible set of consistent
 sequences relative to the observer. It doesn't follow sequences that have
-become inconsistent with the observer, because they can't interact with each other.
+become inconsistent with the observer, because they can't interact with
+each other.
 
 To ensure consistency, **the editor only allows new edges between spacelike
 elements**.
@@ -217,4 +219,4 @@ $\displaystyle\qquad 1 = cos^2 \theta_1 + cos^2 \theta_2 + \dots + cos^2 \theta_
 
 This works both ways. So, if we want to move from classical probabilities to
 quantum probabilities - that is, from sets to vector spaces - we need to take
-square roots to get probability amplitudes.
+square roots to get the probability amplitudes.
