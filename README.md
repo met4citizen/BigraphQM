@@ -88,7 +88,7 @@ space sizes.
 
 In the app we use a variant of the Bron-Kerbosch algorithm
 with the worst-case time complexity $O(3^{n\over 3})$ and for
-[$k$-degenerate graphs](https://en.wikipedia.org/wiki/Degeneracy_%28graph_theory%29)
+[k-degenerate graphs](https://en.wikipedia.org/wiki/Degeneracy_%28graph_theory%29)
 $O(kn3^\frac{k}{3})$.
 
 $\displaystyle\qquad\mathcal{F} = \mathbf{BK}(\varnothing,\Omega,\varnothing)$
