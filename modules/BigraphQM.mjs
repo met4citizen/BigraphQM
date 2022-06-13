@@ -203,7 +203,29 @@ class BigraphQM extends Bigraph {
 					}
 				}
 			});
-			this.M2.set(t,{ rho: m });
+
+			// Computational basis
+			let maxl = Math.max( ...f.map( x => x.length ) );
+			let fc = Array(n).fill().map( x => Array(maxl).fill(0) );
+			f.forEach( (x,i) => {
+				let l = x.length;
+				for(let j=0; j<l; j++) {
+					fc[this.pos(x[j])-1][l-1] += p[i] / l;
+				}
+			});
+			let mc = Array(maxl).fill().map( x => Array(maxl).fill(0) );
+			fc.forEach( x => {
+				for(let i=0; i<maxl; i++) {
+					if ( x[i] > 0 ) {
+						mc[i][i] += x[i];
+						for(let j=i+1; j<maxl; j++) {
+							mc[i][j] += x[j];
+							mc[j][i] += x[j];
+						}
+					}
+				}
+			});
+			this.M2.set(t,{ rho: m, rhoc: mc });
 		}
 		this.updatetime = this.time;
 	}
@@ -327,6 +349,18 @@ class BigraphQM extends Bigraph {
 			ss += '\nDensity matrix:\n<table><tr><td class="vmiddle">\\(\\quad\\rho = \\)</td><td>';
 			ss += '<table class="densitymatrix">';
 			m.rho.forEach( (x,i) => {
+				ss += '<tr>';
+				x.forEach( y => {
+					let v = this.round(y,2);
+					ss += '<td>' + ( (v==0 || v==1) ? v : v.toString().substring(1) ) + '</td>';
+				});
+				ss += '</tr>';
+			});
+			ss += '</table></td><tr></table>';
+
+			ss += '\nComputational basis:\n<table><tr><td class="vmiddle">\\(\\quad\\rho_c = \\)</td><td>';
+			ss += '<table class="densitymatrix">';
+			m.rhoc.forEach( (x,i) => {
 				ss += '<tr>';
 				x.forEach( y => {
 					let v = this.round(y,2);

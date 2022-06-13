@@ -29,8 +29,9 @@ Relative to each other, these sequences can be either consistent or
 inconsistent. Only consistent (spacelike) sequences can interact.
 
 In our model, sequences are thought of as maximal paths in a directed
-bipartite graph. Whether two unique paths are consistent or not, depends on
-the ancestral relations of their elements.
+[bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph).
+Whether two unique paths are consistent or not, depends on the ancestral
+relations of their elements.
 
 Consistency is a pairwise property. That is, if $A$ is consistent with both
 $B$ and $C$, $B$ and $C$ don't have to be consistent with each other.
@@ -40,7 +41,8 @@ Measurement is the process in which an observer interacts with
 a spacelike system in a way that all these potential second-order
 inconsistencies get resolved. The result is a set of mutually inconsistent
 outcomes in each of which every pair is consistent. In graph theory, these
-are called maximal cliques.
+are called maximal
+[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 
 There are typically many sequences (permutations, ordered sets) that lead to
 the same maximal clique
@@ -51,7 +53,9 @@ that lead to each maximal clique is the probability of that outcome.
 
 ## The Model
 
-Let $G$ be a directed bipartite graph with parts $V_{token}$ and $V_{event}$.
+Let $G$ be a directed
+[bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
+$V_{token}$ and $V_{event}$.
 
 $\displaystyle\qquad G= (V_{token} \cup V_{event}, E),\quad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
 
@@ -67,7 +71,8 @@ is always relative to some observer $X\subset L_{token}$.
 
 $\displaystyle\qquad S(X)=\big\lbrace v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v){:}\: a \in V_{event}\big\rbrace$
 
-Let the sample space $\Omega$ be some subset of the space.
+Let the [sample space](https://en.wikipedia.org/wiki/Sample_space)
+$\Omega$ be some subset of the space.
 
 $\displaystyle\qquad\Omega\subseteq S(X)$
 
@@ -82,11 +87,13 @@ $N(v)$ is the set of all spacelike tokens relative to that token.
 
 $\displaystyle\qquad N(v) = S(v)\cap \Omega,\quad v\in\Omega$
 
-The possible outcomes $\mathcal{F}$ are now this graph's maximal cliques.
+The possible outcomes $\mathcal{F}$ are now this graph's maximal
+[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 The clique problem is NP-complete, but typically solvable within our sample
 space sizes.
 
-In the app we use a variant of the Bron-Kerbosch algorithm
+In the app we use a variant of the
+[Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron–Kerbosch_algorithm)
 with the worst-case time complexity $O(3^{n\over 3})$ and for
 [k-degenerate graphs](https://en.wikipedia.org/wiki/Degeneracy_%28graph_theory%29)
 $O(kn3^\frac{k}{3})$.
@@ -117,10 +124,23 @@ tokens $v_1,\dots,v_n$ in $\Omega$. The square root left to the sum is the
 
 $\displaystyle\qquad |\psi_j\rangle = \frac{1}{\sqrt{|\mathcal{F_j}|}}\sum_{i=1}^{n}\mathbf{1}_\mathcal{F_j}{(v_i)}|\phi_i\rangle$
 
-The density matrix $\rho$ is the weighted sum of the outer products of
-the pure states.
+The [density matrix](https://en.wikipedia.org/wiki/Density_matrix) $\rho$
+is the weighted sum of the outer products of the pure states.
 
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
+
+## Computational Basis
+
+From the observer's point of view all the tokens are identical. It also means,
+that they can't distinguish between two local cliques with the same numbers
+of tokens. At measurement they can, however, distinguish the number of
+interactions (i.e. energy), which is proportional to the size of the clique.
+
+So, in order to create a two-state system that the observer can use for
+computation, we can define a [qubit](https://en.wikipedia.org/wiki/Qubit)
+so that $|0\rangle$ represents cliques of size one (ground state) and
+$|1\rangle$ cliques of size two (first excited state). This scheme
+generalises to d-state system i.e. qudits.
 
 
 ## The Editor
