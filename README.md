@@ -29,7 +29,7 @@ Relative to each other, these sequences can be either consistent or
 inconsistent. Only consistent (spacelike) sequences can interact.
 
 In our model, sequences are thought of as maximal paths in a directed
-[bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph).
+[bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph).
 Whether two unique paths are consistent or not, depends on the ancestral
 relations of their elements.
 
@@ -138,7 +138,7 @@ $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 ## Computational Basis
 
 From the observer's point of view all the tokens are identical. It also means,
-that they can't distinguish between two local cliques with the same numbers
+that they can't distinguish between two local cliques with the same number
 of tokens. At measurement they can, however, distinguish the number of
 interactions (i.e. energy), which is proportional to the size of the clique.
 
