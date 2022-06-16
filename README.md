@@ -34,28 +34,33 @@ Whether two unique paths are consistent or not, depends on the ancestral
 relations of their elements.
 
 Consistency is a pairwise property. That is, if $A$ is consistent with both
-$B$ and $C$, $B$ and $C$ don't have to be consistent with each other.
+$B$ and
+$C$,
+$B$ and
+$C$ don't have to be consistent with each other.
 This gives the system many of its quantum mechanical properties.
 
-Measurement is the process in which an observer interacts with
-a spacelike system in a way that all these potential second-order
-inconsistencies get resolved. The result is a set of mutually inconsistent
-outcomes in each of which every pair is consistent. In graph theory, these
-are called maximal
+Measurement is the process in which some part (*the observer*) interacts
+with some other spacelike part (*the system*) in a way that resolves
+all these second-order inconsistencies. The result is a set of mutually
+inconsistent outcomes in each of which every pair is consistent.
+In graph theory, these are called maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 
-There are typically many sequences (permutations, ordered sets) that lead to
-the same maximal clique
-([image](https://en.wikipedia.org/wiki/Image_%28mathematics%29), unordered set).
-From the observer's point of view, the proportion of all the sequences
-that lead to each maximal clique is the probability of that outcome.
+There are typically many sequences (*permutations*, *ordered sets*) that
+lead to the same maximal clique
+(*[image](https://en.wikipedia.org/wiki/Image_%28mathematics%29)*,
+*unordered set*). From the observer's point of view, the proportion of all
+the sequences that lead to each maximal clique is the probability of that
+outcome.
 
 
 ## The Model
 
 Let $G$ be a directed
 [bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
-$V_{token}$ and $V_{event}$.
+$V_{token}$ and
+$V_{event}$.
 
 $\displaystyle\qquad G= (V_{token} \cup V_{event}, E),\quad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
 
@@ -69,7 +74,7 @@ Two tokens are spacelike, iff all their
 (LCA) are events. This means that the concept of space $S(X)\subset L_{token}$
 is always relative to some observer $X\subset L_{token}$.
 
-$\displaystyle\qquad S(X)=\big\lbrace v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v){:}\: a \in V_{event}\big\rbrace$
+$\displaystyle\qquad S(X)=\big\lbrace v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v): a \in V_{event}\big\rbrace$
 
 Let the [sample space](https://en.wikipedia.org/wiki/Sample_space)
 $\Omega$ be some subset of the space.
@@ -119,7 +124,8 @@ $\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k=1}^{m} |\mathca
 
 The pure quantum state of each clique can be presented as a linear combination
 of orthonormal vectors $|\phi_1\rangle,\dots,|\phi_n\rangle$ representing
-tokens $v_1,\dots,v_n$ in $\Omega$. The square root left to the sum is the
+tokens $v_1,\dots,v_n$ in
+$\Omega$. The square root left to the sum is the
 [normalizing constant](https://en.wikipedia.org/wiki/Normalizing_constant).
 
 $\displaystyle\qquad |\psi_j\rangle = \frac{1}{\sqrt{|\mathcal{F_j}|}}\sum_{i=1}^{n}\mathbf{1}_\mathcal{F_j}{(v_i)}|\phi_i\rangle$
@@ -195,7 +201,7 @@ TOOL| DESCRIPTION
 MODEL| DESCRIPTION
 :-: | :--
 <nobr>**Wave function collapse**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-collapse.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=GiKSGgQECBIGgQIECBGwQIECB)|All events are local by definition. However, new edges can add shortcuts through the graph's ancestral structure and break some existing spacelike relations. These instantaneous and non-local effects are known as the [wave function collapse](https://en.wikipedia.org/wiki/Wave_function_collapse).
-<nobr>**Bell state (entanglement)**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-bellstate.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiIkSIkIQjQiEQjQDMGJAjQECIBAg)|[Bell state](https://en.wikipedia.org/wiki/Bell_state) is an example of a maximally [entangled state](https://en.wikipedia.org/wiki/Quantum_entanglement). Here we start with two sequences $A$ and $B$. They both split into two inconsistent (orthogonal) branches. Lets call them $\lvert\uparrow\rangle$ and $\lvert\downarrow\rangle$. These branches get entangled so that the observer can only see either $\lvert\uparrow\downarrow\rangle$ or $\lvert\downarrow\uparrow\rangle$ - never $\lvert\uparrow\uparrow\rangle$ or $\lvert\downarrow\downarrow\rangle$.
+<nobr>**Bell state (entanglement)**</nobr><br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-bellstate.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiIkSIkIQjQiEQjQDMGJAjQECIBAg)|[Bell state](https://en.wikipedia.org/wiki/Bell_state) is an example of a maximally [entangled state](https://en.wikipedia.org/wiki/Quantum_entanglement). Here we start with two sequences $A$ and $B$. They both split into two inconsistent (orthogonal) branches. Lets call them <nobr>\|&uarr;></nobr> and <nobr>\|&darr;></nobr>. These branches get entangled so that the observer can only see either <nobr>\|&uarr;&darr;></nobr> or <nobr>\|&darr;&uarr;></nobr>, but never <nobr>\|&uarr;&uarr;></nobr> or <nobr>\|&darr;&darr;></nobr>.
 **Decoherence**<br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-decoherence.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiI8SSRHgISIkKDAjwEBAQEBAQ)|[Decoherence](https://en.wikipedia.org/wiki/Quantum_decoherence) is a process in which the system interacts with its environment so that the overlap decreases and the states become separable.
 **Interference**<br/><img src="https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/gallery-interference.svg" width=700/><br/>[Open in App](https://met4citizen.github.io/BigraphQM/?g=DiI8SSRHgCAigkCAjwBARAQRAR4AgIgIAgI8AQEQMAQEeAICMCAYCPAEBGBAEBHgICAgICAjwEBAQEBAQ)|Two spacelike parts of the sample space can interact and thus [interfere](https://en.wikipedia.org/wiki/Wave_interference) with each other. This changes the probabilities over time and disturbs the [probability wave](https://en.wikipedia.org/wiki/Wave_function). This can be seen at measurement as an interference pattern. - Note: The shown example is the result of random interactions.
 
@@ -229,7 +235,8 @@ First, Kolmogorov's axioms tell us that the probabilities should add up to one.
 Second, as shown below, the sum of cosines squared equals to one in
 high dimensional vector spaces:
 
-Let $r$ be the length of a hypervector in $n$ dimensional space.
+Let $r$ be the length of a hypervector in
+$n$ dimensional space.
 
 $\displaystyle\qquad r =\sqrt{x_1^2+x_2^2+\dots+x_n^2} \qquad \Bigg| \cdot ()^2 \quad \Bigg| \cdot {1 \over {r^2}}$
 
