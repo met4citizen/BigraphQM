@@ -58,7 +58,7 @@ outcome.
 ## The Model
 
 Let $G$ be a directed
-[bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
+[bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
 $V_{token}$ and
 $V_{event}$.
 
