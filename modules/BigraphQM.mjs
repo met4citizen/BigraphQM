@@ -39,10 +39,12 @@ class BigraphQM extends Bigraph {
 	* Round up. Use exponential notation to avoid rounding errors.
 	* @param {number} x Number
 	* @param {number} [e=0] Number of digits
+	* @param {boolean} [allowExp=false] Allow scientific notation
 	* @return {number} Number
 	*/
-	round(x,e=0) {
-		return Number(Math.round(x+'e'+e)+'e-'+e);
+	round(x,e=0,allowExp=false) {
+		if ( allowExp && ( x > 10000 || ( x !== 0 && x < Number('1e-'+e)) ) ) return x.toExponential(e);
+		return Number(Math.round(x+'e'+e) + 'e-' + e);
 	};
 
 	/**
@@ -187,8 +189,12 @@ class BigraphQM extends Bigraph {
 					y.p += p[i];
 				});
 			});
+
+			// Entropy
+			let h = - p.reduce( (a,b) => a + (b ? (b * Math.log2(b)) : 0), 0 );
+
 			// Set measurement results
-			this.M1.set(t,{ omega: omega, f: f, p: p });
+			this.M1.set(t,{ omega: omega, f: f, p: p, e: flen, h: h });
 
 			// METHOD #2
 			let n = omega.length;
@@ -339,14 +345,15 @@ class BigraphQM extends Bigraph {
 		let m = this.M1.get( this.time );
 		if ( m ) {
 			ss = 'Sample space:\n<table><tr><td>\\(\\quad\\Omega = \\)</td><td>{' + m.omega.map(x => this.pos(x)).join(',&#8203;') + '}</td></tr></table>';
-			ss += '\nCliques:\n<table><tr><td>\\(\\quad\\mathcal{F} = \\)</td><td>{' + m.f.map( x => '{'+x.map( y => this.pos(y) ).join(',&#8203;')+'}' ).join(',&#8203;') + '}</td></tr></table>';
-			ss += '\nProbabilities:\n<table><tr><td>\\(\\quad Pr = \\)</td><td>(' + m.p.map( x => this.round(x,2) ).join(',&#8203;')+')</td></tr></table>';
+			ss += 'Maximal cliques:\n<table><tr><td>\\(\\quad\\mathcal{F} = \\)</td><td>{' + m.f.map( x => '{'+x.map( y => this.pos(y) ).join(',&#8203;')+'}' ).join(',&#8203;') + '}</td></tr></table>';
+			ss += 'Probabilities:\n<table><tr><td>\\(\\quad Pr = \\)</td><td>(' + m.p.map( x => this.round(x,2,true) ).join(',&#8203;')+')</td></tr></table>';
+			s.push( { id: "d1", text: ss });
 		}
 
 		// Final status, method 2
 		m = this.M2.get( this.time );
 		if ( m ) {
-			ss += '\nDensity matrix:\n<table><tr><td class="vmiddle">\\(\\quad\\rho = \\)</td><td>';
+			ss = '<table><tr><td class="vmiddle">\\(\\rho = \\)</td><td>';
 			ss += '<table class="densitymatrix">';
 			m.rho.forEach( (x,i) => {
 				ss += '<tr>';
@@ -357,8 +364,25 @@ class BigraphQM extends Bigraph {
 				ss += '</tr>';
 			});
 			ss += '</table></td><tr></table>';
+			s.push( { id: "d4", text: ss });
 
-			ss += '\nComputational basis:\n<table><tr><td class="vmiddle">\\(\\quad\\rho_c = \\)</td><td>';
+			const fmt = {
+			  notation: 'scientific',
+			  maximumFractionDigits: 2
+			};
+			ss = '\\(\\quad H = -\\sum p_i \\log p_i\\)<br/>';
+			ss += '<table class="timetable"><thead><tr><th>\\(t\\)</th><th>\\(\\sum |\\mathcal{F_i}|!\\)</th><th>\\(H\\)</th></thead></tr><tbody>'
+			let l = m.length;
+			for( let t=this.inittime; t<=this.time; t+=2) {
+				let m1 = this.M1.get(t);
+				let estr = (m1.e > 10000n ) ? m1.e.toLocaleString( 'en-US', fmt ) : Number(m1.e).toString();
+				let hstr = this.round(m1.h,2,true);
+				ss += '<tr><td>' + t + '</td><td>' + estr + '</td><td>' + hstr + '</td></tr>';
+			}
+			ss += '</tbody></table>';
+			s.push( { id: "d5", text: ss });
+
+			ss = '<table><tr><td class="vmiddle">\\(\\rho_c = \\)</td><td>';
 			ss += '<table class="densitymatrix">';
 			m.rhoc.forEach( (x,i) => {
 				ss += '<tr>';
@@ -369,10 +393,7 @@ class BigraphQM extends Bigraph {
 				ss += '</tr>';
 			});
 			ss += '</table></td><tr></table>';
-		}
-
-		if ( ss.length ) {
-			s.push( { title: 'PROBABILITIES', text: ss }  );
+			s.push( { id: "d6", text: ss });
 		}
 
 		return s;

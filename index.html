@@ -15,31 +15,35 @@
   <style>
   html{ width:100%; height:100%; font-size: 16px; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.3px;}
   body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1.5rem;  overflow: hidden; text-align: left; touch-action: manipulation; }
-  table { margin: 4px 0 0 0; border-collapse: collapse; }
+  table { margin: 10px 0; border-collapse: collapse; }
   td { vertical-align: top; width: auto; overflow-wrap:break-word; }
   td.vmiddle { vertical-align: middle; }
   .densitymatrix { white-space: nowrap; margin: 0 0 0 10px; border-left: 1px solid black; border-right: 1px solid black; border-radius: 6px; }
   .densitymatrix td { margin:auto; text-align: center; padding: 2px; min-width:20px; }
+  .timetable { border: 1px solid black; }
+  .timetable th, .timetable td { margin:auto; text-align: center; padding: 2px; min-width:60px; border: 1px solid black; }
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background-color: rgba(155, 155, 155, 0.5); border: transparent; }
+  ::-webkit-scrollbar-thumb { background-color: rgba(119, 136, 153, 0.5); border: transparent; }
 
   #outer{ display: flex; position: absolute; top: 56px; left:0; right:0; bottom:0; margin:0; padding:0; background-color: lightblue;}
-  #bigraph{ flex: 1; margin: 2px 0 2px 2px; padding:0; overflow:scroll; vertical-align:top; text-align: center; scrollbar-color: rgba(155, 155, 155, 0.5) transparent; scrollbar-width: thin; border: 2px solid skyblue; background-color: white;}
+  #bigraph{ flex: 1; margin: 2px 0 2px 2px; padding:0; overflow:scroll; vertical-align:top; text-align: center; scrollbar-color: rgba(155, 155, 155, 0.5) transparent; scrollbar-width: thin; border: 2px solid lightslategray; background-color: white;}
   #bigraph svg { margin: 30px 50px 200px 50px; }
   #resizer{ flex: 0 0 4px; background-color: lightblue; border:0; margin:0; padding:0; pointer-events: none; }
   #resizer:hover{cursor: ew-resize;}
-  #qm{ flex: 1; margin: 2px 2px 2px 0; padding:0; background-color: lightblue; border: 0; vertical-align:top; text-align: center; overflow:hidden; border: 2px solid skyblue; display:none;}
-  #text { margin:0; padding: 0; border: solid white; border-width: 0 0 0 10px; border-radius:0; resize: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; height:100%; font-family: "Courier",monospace; font-size:14px; line-height: 1.1rem; color:#404040; background-color: white; max-height: 100%; overflow: auto; text-align: left; white-space: pre-line; overflow-wrap: break-word; }
+  #qm{ flex: 1; margin: 2px 2px 2px 0; padding:0; background-color: lightblue; border: 0; vertical-align:top; text-align: center; overflow:hidden; border: 2px solid lightslategray; display:none;}
+  #text { margin:0; padding: 0; border: 0; resize: none; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; height:100%; font-family: "Courier",monospace; font-size:14px; line-height: 14px; color:#404040; background-color: white; max-height: 100%; overflow: auto; text-align: left; }
+  details { margin:0; padding:0; }
+  details summary { color: slategray; padding: 3px 10px; font-weight: bold; margin: 0; cursor: pointer; }
+  details p { display: block; margin: 0 0 0 30px; padding: 5px 0;  white-space: pre-line; overflow-wrap: break-word; }
+
 
   .toolkit { position: fixed; z-index: 3; opacity: 0.6; cursor: default; pointer-events: none;}
   #topleft { top:0; left: 0; margin: 0 0 0 5px; padding: 4px; }
   #topright { top:0; right: 0; margin: 0 10px 0 0; padding: 4px; }
   .command, .setting { margin:0; padding:2px; display: inline-block; background-color: transparent; color: black; width: 26px; height: 26px; border: 0; border-radius: 3px; font-size: 16px; font-weight: bold; line-height:26px; text-align: center; vertical-align: middle; cursor: pointer; pointer-events: auto; }
   .command svg, .setting svg { margin: 0; padding: 0; width: 26px; height: 26px; }
-  .title { color: steelblue; font-weight: bold; }
-  .title::before { content: ">> "; }
   .subtitle { position: absolute; font-size: 10px; font-weight: bold; color: black; margin-top: 26px; margin-left: 12px; transform: translate(-50%,0);}
   .subtitle2 { position: absolute; font-size: 10px; font-weight: bold; color: black; margin-top: 30px; margin-left: -2px; transform: translate(-50%,0); pointer-events: none;}
   .vl { margin:0 8px; }
@@ -62,6 +66,11 @@
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/@hpcc-js/wasm@1.12.8/dist/index.min.js" type="javascript/worker"></script>
 <script src="https://unpkg.com/d3-graphviz@4.1.1/build/d3-graphviz.js"></script>
+<script>
+MathJax = {
+  loader: {load: ["input/tex", "output/svg"]}
+};
+</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <script type="module">
@@ -86,7 +95,6 @@ let lastTouched = null; // Used to implement double click in touch devices
 let lastTouch = null; // Used to implement double click in touch devices
 let graphviz = null; // Graphviz engine
 let bigraphw = '66%'; // Initial graph window width
-let isEditMode =  getUrlParameter('edit') ? true : false; // True, if edit mode
 
 // Scale SVG based on current zoom level
 function attributer(datum, index, nodes) {
@@ -316,16 +324,16 @@ function render( changed=true ) {
 
     // Status
     let txt = '';
-    qm.status(selected).forEach( (x,i) =>
-      txt += (i?'\n':'')+'\n<span class="title">'+x.title+'</span>\n'+x.text );
+    qm.status(selected).forEach( (x,i) => {
+      d3.select('details#'+x.id+">p").html(x.text);
+    });
     let url = window.location.href.split('?')[0] +
       (g ? '?g=' + encodeURIComponent(g) : '');
-    txt += '\n\n<span class="title">URL</span>\n' + url;
-    txt += '\n\n<span class="title">DOT</span>\n' + dot;
-    d3.select('#text').html( txt );
+    d3.select('details#d998>p').html(url);
+    d3.select('details#d999>p').html(dot);
 
     // Typeset Math
-    if (window.MathJax) {
+    if (MathJax && MathJax.typesetClear ) {
       let mathNode = document.getElementById('text');
       MathJax.typesetClear([ mathNode ]);
       MathJax.typeset([ mathNode ]);
@@ -517,33 +525,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
     document.body.removeChild(downloadLink);
   });
 
-  if ( isEditMode ) {
-    // Enable edit mode
-    d3.select('#text')
-      .attr('contenteditable', true)
-      .on('input', function(e) {
-        d3.select('#sync').classed('disabled', false);
-      });
-
-    // Enable sync functionality
-    d3.select('#sync')
-      .style('display','inline-block')
-      .style('visibility','visible')
-      .on('click', function(e) {
-        let dot = d3.select('#text').text();
-        let idx = dot.indexOf('digraph {');
-        if ( idx !== -1 ) {
-          try {
-            d3.select('#sync').classed('disabled', true);
-            graphviz.renderDot( dot.substring(idx) );
-          }
-          catch(ex) {
-            alert(ex);
-          }
-        }
-    });
-  }
-
   // Initialize
   qm.reset();
 
@@ -569,7 +550,36 @@ document.addEventListener('DOMContentLoaded', function(e) {
     <div id="bigraph" class="noselect"></div>
     <div id="resizer" class="noselect"></div>
     <div id="qm">
-      <div id="text" spellcheck="false"></textarea>
+      <div id="text" spellcheck="false">
+        <details id="d0">
+          <summary>SELECTION</summary>
+          <p></p>
+        </details>
+        <details id="d1" open>
+          <summary>PROBABILITY \((\Omega,\mathcal{F},Pr)\)</summary>
+          <p></p>
+        </details>
+        <details id="d4">
+          <summary>DENSITY MATRIX \(\rho\)</summary>
+          <p></p>
+        </details>
+        <details id="d5">
+          <summary>ENTROPY \(H\)</summary>
+          <p></p>
+        </details>
+        <details id="d6">
+          <summary>COMPUTATIONAL BASIS \(\rho_c\)</summary>
+          <p></p>
+        </details>
+        <details id="d998">
+          <summary>BIGRAPH URL</summary>
+          <p></p>
+        </details>
+        <details id="d999">
+          <summary>DOT</summary>
+          <p></p>
+        </details>
+      </div>
     </div>
   </div>
 
@@ -601,7 +611,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
   </div>
 
   <div id="topright" class="toolkit noselect">
-    <span id="sync" class="command disabled" title="Run" style="display:none;visibility:hidden;"><span class="subtitle">DOT</span><svg viewBox="0 0 24 24" fill="none"><path d="M4.56079 10.6418L6.35394 3.94971L8.25402 5.84979C11.7312 3.6588 16.3814 4.07764 19.41 7.1063L17.9958 8.52052C15.7536 6.27827 12.3686 5.87519 9.71551 7.31128L11.2529 8.84869L4.56079 10.6418Z" fill="currentColor" /><path d="M19.4392 13.3581L17.646 20.0502L15.7459 18.1501C12.2688 20.3411 7.61857 19.9223 4.58991 16.8936L6.00413 15.4794C8.24638 17.7217 11.6313 18.1247 14.2844 16.6887L12.747 15.1512L19.4392 13.3581Z" fill="currentColor" /></svg></span>
     <span id="info" class="setting" title="Information"><span class="subtitle">INFO</span><svg viewBox="0 0 24 24" fill="none"><path d="M13.325 3.05011L8.66741 20.4323L10.5993 20.9499L15.2568 3.56775L13.325 3.05011Z" fill="currentColor" /><path d="M7.61197 18.3608L8.97136 16.9124L8.97086 16.8933L3.87657 12.1121L8.66699 7.00798L7.20868 5.63928L1.04956 12.2017L7.61197 18.3608Z" fill="currentColor" /><path d="M16.388 18.3608L15.0286 16.9124L15.0291 16.8933L20.1234 12.1121L15.333 7.00798L16.7913 5.63928L22.9504 12.2017L16.388 18.3608Z" fill="currentColor" /></svg></span>
     <span class="vl"></span>
     <span id="url" class="command" title="Copy URL"><span class="subtitle">URL</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.8284 12L16.2426 13.4142L19.071 10.5858C20.6331 9.02365 20.6331 6.49099 19.071 4.9289C17.509 3.3668 14.9763 3.3668 13.4142 4.9289L10.5858 7.75732L12 9.17154L14.8284 6.34311C15.6095 5.56206 16.8758 5.56206 17.6568 6.34311C18.4379 7.12416 18.4379 8.39049 17.6568 9.17154L14.8284 12Z" fill="currentColor" /><path d="M12 14.8285L13.4142 16.2427L10.5858 19.0711C9.02372 20.6332 6.49106 20.6332 4.92896 19.0711C3.36686 17.509 3.36686 14.9764 4.92896 13.4143L7.75739 10.5858L9.1716 12L6.34317 14.8285C5.56212 15.6095 5.56212 16.8758 6.34317 17.6569C7.12422 18.4379 8.39055 18.4379 9.1716 17.6569L12 14.8285Z" fill="currentColor" /><path d="M14.8285 10.5857C15.219 10.1952 15.219 9.56199 14.8285 9.17147C14.4379 8.78094 13.8048 8.78094 13.4142 9.17147L9.1716 13.4141C8.78107 13.8046 8.78107 14.4378 9.1716 14.8283C9.56212 15.2188 10.1953 15.2188 10.5858 14.8283L14.8285 10.5857Z" fill="currentColor" /></svg></span>
@@ -622,13 +631,13 @@ document.addEventListener('DOMContentLoaded', function(e) {
         </marker>
         <symbol id="obs" viewBox="0 0 24 24">
           <rect x="0" y="0" width="24" height="24" fill="white"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="grey"/>
-          <path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="grey"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7ZM14 7C14 8.10457 13.1046 9 12 9C10.8954 9 10 8.10457 10 7C10 5.89543 10.8954 5 12 5C13.1046 5 14 5.89543 14 7Z" fill="slategray"/>
+          <path d="M16 15C16 14.4477 15.5523 14 15 14H9C8.44772 14 8 14.4477 8 15V21H6V15C6 13.3431 7.34315 12 9 12H15C16.6569 12 18 13.3431 18 15V21H16V15Z" fill="slategray"/>
         </symbol>
         <symbol id="env" viewBox="0 0 24 24">
           <rect x="0" y="0" width="24" height="24" fill="white" />
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="grey" />
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M11 0H13V4.06189C12.6724 4.02104 12.3387 4 12 4C11.6613 4 11.3276 4.02104 11 4.06189V0ZM7.0943 5.68018L4.22173 2.80761L2.80752 4.22183L5.6801 7.09441C6.09071 6.56618 6.56608 6.0908 7.0943 5.68018ZM4.06189 11H0V13H4.06189C4.02104 12.6724 4 12.3387 4 12C4 11.6613 4.02104 11.3276 4.06189 11ZM5.6801 16.9056L2.80751 19.7782L4.22173 21.1924L7.0943 18.3198C6.56608 17.9092 6.09071 17.4338 5.6801 16.9056ZM11 19.9381V24H13V19.9381C12.6724 19.979 12.3387 20 12 20C11.6613 20 11.3276 19.979 11 19.9381ZM16.9056 18.3199L19.7781 21.1924L21.1923 19.7782L18.3198 16.9057C17.9092 17.4339 17.4338 17.9093 16.9056 18.3199ZM19.9381 13H24V11H19.9381C19.979 11.3276 20 11.6613 20 12C20 12.3387 19.979 12.6724 19.9381 13ZM18.3198 7.0943L21.1923 4.22183L19.7781 2.80762L16.9056 5.6801C17.4338 6.09071 17.9092 6.56608 18.3198 7.0943Z" fill="grey" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="slategray" />
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M11 0H13V4.06189C12.6724 4.02104 12.3387 4 12 4C11.6613 4 11.3276 4.02104 11 4.06189V0ZM7.0943 5.68018L4.22173 2.80761L2.80752 4.22183L5.6801 7.09441C6.09071 6.56618 6.56608 6.0908 7.0943 5.68018ZM4.06189 11H0V13H4.06189C4.02104 12.6724 4 12.3387 4 12C4 11.6613 4.02104 11.3276 4.06189 11ZM5.6801 16.9056L2.80751 19.7782L4.22173 21.1924L7.0943 18.3198C6.56608 17.9092 6.09071 17.4338 5.6801 16.9056ZM11 19.9381V24H13V19.9381C12.6724 19.979 12.3387 20 12 20C11.6613 20 11.3276 19.979 11 19.9381ZM16.9056 18.3199L19.7781 21.1924L21.1923 19.7782L18.3198 16.9057C17.9092 17.4339 17.4338 17.9093 16.9056 18.3199ZM19.9381 13H24V11H19.9381C19.979 11.3276 20 11.6613 20 12C20 12.3387 19.979 12.6724 19.9381 13ZM18.3198 7.0943L21.1923 4.22183L19.7781 2.80762L16.9056 5.6801C17.4338 6.09071 17.9092 6.56608 18.3198 7.0943Z" fill="slategray" />
         </symbol>
       </defs>
     </svg>

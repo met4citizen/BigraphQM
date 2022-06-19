@@ -417,7 +417,7 @@ class BigraphQMDOT extends BigraphQM {
 					let obs = this.types([-1],v.time)[0];
 					ss = 'Space:\n<table><tr><td>\\(\\quad S('+ this.pos(v) +')=\\)</td>';
 					ss += '<td>{' + this.space([v]).map(x => this.pos(x)).join(',&#8203;') + '}</td></tr></table>';
-					ss += '\nGraph distance to observer:\n<table><tr><td>\\(\\quad d_G(X,' + this.pos(v) + ')=' + this.distance(obs,v) + '\\)</td></tr></table>';
+					ss += 'Graph distance to observer:\n<table><tr><td>\\(\\quad d_G(X,' + this.pos(v) + ')=' + this.distance(obs,v) + '\\)</td></tr></table>';
 				}
 			} else if (titles.length === 2 ) {
 				let v1  = this.v(titles[0]);
@@ -426,16 +426,16 @@ class BigraphQMDOT extends BigraphQM {
 				let cs = this.cosineSimilarity(v1,v2);
 				if ( d && cs ) {
 					ss = 'Graph distance:\n<table><tr><td>\\(\\quad d_G(' + titles[0] + ',' + titles[1] + ')=' + this.distance(v1,v2) + '\\)</td></tr></table>';
-					ss += '\nHamming distance:\n<table><tr><td>\\(\\quad d_H = ' + d.d +
+					ss += 'Hamming distance:\n<table><tr><td>\\(\\quad d_H = ' + d.d +
 						',\\quad |\\Omega| = ' + d.len +
 						',\\quad 1-{d_H \\over |\\Omega|} = ' + this.round(1-d.d/d.len,2) + '\\)</td></tr></table>';
-					ss += '\nCosine similarity:\n<table><tr><td>\\(\\quad S_C = ' + this.round(cs.cs,2) +
+					ss += 'Cosine similarity:\n<table><tr><td>\\(\\quad S_C = ' + this.round(cs.cs,2) +
 						',\\quad S_C^2 = ' + this.round(cs.cs2,2) + '\\)</td></tr></table>';
 				}
 			}
-			s.push( { title: 'SELECTION (' + titles.join(',') + ')', text: ss });
 		}
 
+		s.push( { id: 'd0', text: ss });
 		s.push( ...super.status(titles) );
 
 		return s;

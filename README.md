@@ -135,9 +135,9 @@ is the weighted sum of the outer products of the pure states.
 
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
-Note that the density matrix, as it is described here, is just a limited
-statistical projection and the bipartite graph itself is the actual
-data structure of the model.
+*Note: The density matrix, as it is described here, is just a limited
+statistical projection. The bipartite graph itself is the actual
+data structure of the model.*
 
 
 ## Computational Basis
