@@ -68,7 +68,8 @@
 <script src="https://unpkg.com/d3-graphviz@4.1.1/build/d3-graphviz.js"></script>
 <script>
 MathJax = {
-  loader: {load: ["input/tex", "output/svg"]}
+  loader: {load: ["input/tex", "output/svg", "[tex]/boldsymbol"]},
+  tex: {packages: {'[+]': ['boldsymbol']}}
 };
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js"></script>
