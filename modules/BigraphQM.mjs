@@ -58,7 +58,7 @@ class BigraphQM extends Bigraph {
 				this.factorialCache[ this.factorialCache.length-1 ] * BigInt( this.factorialCache.length )
 			);
 		}
-		return this.factorialCache[n];
+		return BigInt( this.factorialCache[n] );
 	}
 
 	/**
@@ -175,12 +175,12 @@ class BigraphQM extends Bigraph {
 			// All outcomes
 			let f = this.BronKerbosch(t);
 			// Calculate the number of all quantum states
-			let flen = f.reduce( (a,b) => {
+			let e = f.reduce( (a,b) => {
 				return a + this.factorial( b.length );
 			}, BigInt(0));
 			// Calculate the probabilities
 			let p = f.map( x => {
-				return flen ? Number( this.factorial(x.length) * 10000n / flen ) / 10000 : 0;
+				return e ? Number( this.factorial(x.length) * 10000n / e ) / 10000 : 0;
 			});
 			// Set probabilities
 			omega.forEach( v => v.p = 0 );
@@ -194,18 +194,27 @@ class BigraphQM extends Bigraph {
 			let h = - p.reduce( (a,b) => a + (b ? (b * Math.log2(b)) : 0), 0 );
 
 			// Set measurement results
-			this.M1.set(t,{ omega: omega, f: f, p: p, e: flen, h: h });
+			this.M1.set(t,{ omega: omega, f: f, p: p, e: e, h: h });
 
 			// METHOD #2
 			let n = omega.length;
+
+			// Normalized hypervectors for each clique
+			let hvs = Array(f.length).fill().map( (x,i) => {
+				let v = Array(n).fill(0);
+				let norm = 1 / Math.sqrt( f[i].length );
+				f[i].forEach( y => v[ this.pos(y)-1 ] = norm );
+				return v;
+			});
+
+			// Weighted sum of outer products
 			let m = Array(n).fill().map( x => Array(n).fill(0) );
-			f.forEach( (x,k) => {
-				let l = x.length;
-				for(let i=0; i<l; i++) {
-					m[this.pos(x[i])-1][this.pos(x[i])-1] += p[k] * 1 / l;
-					for(let j=i+1; j<l; j++) {
-						m[this.pos(x[i])-1][this.pos(x[j])-1] += p[k] * 1 / l;
-						m[this.pos(x[j])-1][this.pos(x[i])-1] += p[k] * 1 / l;
+			hvs.forEach( (v,k) => {
+				for(let i=0; i<n; i++) {
+					m[i][i] += p[k] * v[i] * v[i];
+					for(let j=i+1; j<n; j++) {
+						m[i][j] += p[k] * v[i] * v[j];
+						m[j][i] += p[k] * v[j] * v[i];
 					}
 				}
 			});
@@ -370,8 +379,7 @@ class BigraphQM extends Bigraph {
 			  notation: 'scientific',
 			  maximumFractionDigits: 2
 			};
-			ss = '\\(\\quad H = -\\sum p_i \\log p_i\\)<br/>';
-			ss += '<table class="timetable"><thead><tr><th>\\(t\\)</th><th>\\(\\sum |\\mathcal{F_i}|!\\)</th><th>\\(H\\)</th></thead></tr><tbody>'
+			ss = '<table class="timetable"><thead><tr><th>\\(t\\)</th><th>\\(\\sum |\\mathcal{F_j}|!\\)</th><th>\\(H_1\\)</th></thead></tr><tbody>'
 			let l = m.length;
 			for( let t=this.inittime; t<=this.time; t+=2) {
 				let m1 = this.M1.get(t);
