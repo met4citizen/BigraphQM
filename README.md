@@ -16,10 +16,9 @@ by using a variant of the
 
 The app uses [d3-graphviz](https://github.com/magjac/d3-graphviz) and
 [@hpcc-js/wasm](https://github.com/hpcc-systems/hpcc-js-wasm) for rendering
-graphs and [MathJax](https://github.com/mathjax/MathJax) for displaying
-LaTeX notation. The idea for the model, together with its interpretation,
-is a spin-off of my earlier project
-[Hypergraph](https://github.com/met4citizen/Hypergraph).
+graphs and [KaTeX](https://katex.org) for displaying LaTeX notation.
+The idea for the model, together with its interpretation, is a spin-off
+of my earlier project [Hypergraph](https://github.com/met4citizen/Hypergraph).
 
 
 ## Overview
