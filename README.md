@@ -26,11 +26,11 @@ is a spin-off of my earlier project
 
 In physical reality all the possible sequences of interactions happen.
 Relative to each other, these sequences can be either consistent or
-inconsistent. Only consistent (spacelike) sequences can interact.
+inconsistent. Only consistent (*spacelike*) sequences can interact.
 
 In our model, sequences are thought of as maximal paths in a directed
 [bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph).
-Whether two unique paths are consistent or not, depends on the ancestral
+Whether two paths are consistent or not, depends on the ancestral
 relations of their elements.
 
 Consistency is a pairwise property. That is, if $A$ is consistent with both
@@ -51,8 +51,8 @@ There are typically many sequences (*permutations*, *ordered sets*) that
 lead to the same maximal clique
 (*[image](https://en.wikipedia.org/wiki/Image_%28mathematics%29)*,
 *unordered set*). From the observer's point of view, the proportion of all
-the sequences that lead to each maximal clique is the probability of that
-outcome.
+the sequences that lead to each maximal clique is the probability
+(*weight*) of that outcome.
 
 
 ## The Model
@@ -92,7 +92,7 @@ $N(v)$ is the set of all spacelike tokens relative to that token.
 
 $\displaystyle\qquad N(v) = S(v)\cap \Omega,\quad v\in\Omega$
 
-The possible outcomes $\mathcal{F}$ are now this graph's maximal
+The outcomes $\mathcal{F}$ are this graph's maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 The clique problem is NP-complete, but typically solvable within our sample
 space sizes.
@@ -116,16 +116,32 @@ ALGORITHM BK(R, P, X) IS
         X := X ⋃ {v}
 ```
 
-For each clique $\mathcal{F_1},\dots,\mathcal{F_m}$ there is a probability
-$p_1,\dots,p_m$ that is the proportion of all consistent sequences of
-interactions leading to that clique.
+Let $p_j$ be the proportion of all the consistent interactions leading to
+the clique $\mathcal{F_j}\in\mathcal{F}$. Informally we call it the probability
+of the outcome. However, if we buy into the philosophy that all the consistent
+interactions are realized, we should instead regard it as a branch weight.
 
-$\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k=1}^{m} |\mathcal{F_k}|!}},\quad j\in\{1,\dots,m\}$
+$\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k} |\mathcal{F_k}|!}},\quad j\in\{1,\dots,|\mathcal{F}|\}$
+
+Using the above definition, we can calculate the proportion $\lambda_i$
+in which the token $v_i\in\Omega$ will be a part of the possible outcomes.
+
+$\displaystyle\qquad \lambda_i=\sum_{j}\mathbf{1}_\mathcal{F_j}{(v_i)} p_j,\quad i\in\{1,\dots,|\Omega|\}$
+
+### Entropy
+
+Based on the classical probabilities we can calculate the
+[Shannon entropy](https://en.wikipedia.org/wiki/Entropy_%48information_theory%49)
+$H_1$.
+
+$\displaystyle\qquad H_1 = -\sum_j p_j \log p_j$
+
+
+### Density matrix
 
 The pure quantum state of each clique can be presented as a linear combination
-of orthonormal vectors $|\phi_1\rangle,\dots,|\phi_n\rangle$ representing
-tokens $v_1,\dots,v_n$ in
-$\Omega$. The square root left to the sum is the
+of orthonormal vectors $|\phi_i\rangle$ representing the tokens
+$v_i\in\Omega$. The square root left to the sum is the
 [normalizing constant](https://en.wikipedia.org/wiki/Normalizing_constant).
 
 $\displaystyle\qquad |\psi_j\rangle = \frac{1}{\sqrt{|\mathcal{F_j}|}}\sum_{i=1}^{n}\mathbf{1}_\mathcal{F_j}{(v_i)}|\phi_i\rangle$
@@ -136,11 +152,11 @@ is the weighted sum of the outer products of the pure states.
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
 *Note: The density matrix, as it is described here, is just a limited
-statistical projection. The bipartite graph itself is the actual
-data structure of the model.*
+projection. It can't represent the detailed ancestral structure. The bipartite
+graph itself is the actual data structure of the model.*
 
 
-## Computational Basis
+### Computational Basis
 
 From the observer's point of view all the tokens are identical. It also means,
 that they can't distinguish between two local cliques with the same number
@@ -166,7 +182,7 @@ elements**.
 
 SYMBOL| DESCRIPTION
 :-: | :--
-![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symboltoken.svg)<br/><sup>TOKEN</sup> | Tokens are abstract elements. The number inside the symbol $[0,1]$ represent the probability that the token will end up being part of some (any) classical state at (hypothetical) measurement.
+![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symboltoken.svg)<br/><sup>TOKEN</sup> | Tokens are abstract elements. The number inside the symbol $[0,1]$ represent the probability $\lambda$ that the token would end up being a part of some (any) classical state at (hypothetical) measurement.
 ![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symbolevent.svg)<br/><sup>EVENT</sup> | Events use tokens as input and produce tokens as output.
 ![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symboledge.svg)<br/><sup>EDGE</sup> | Directed edges represent input/output relations between tokens and events. Only consistent (i.e. spacelike) connections are allowed.
 ![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symbolobs.svg)<br/><sup>OBSERVER</sup> | Observer represents a classical system relative to which probabilities are calculated. The observer, too, is a bipartite subgraph, but instead of showing individual tokens and events, they are grouped together for simplicity.
