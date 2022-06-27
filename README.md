@@ -8,15 +8,14 @@ to quantum mechanics.
 In the current version, quantum systems can be modelled by manually building
 [bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph).
 The method for calculating probabilities is based on finding maximal
-[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29)
-by using a variant of the
+[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
+In the app we use a variant of the
 [Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron–Kerbosch_algorithm).
 
 **Run it: https://met4citizen.github.io/BigraphQM/**
 
-The app uses [d3-graphviz](https://github.com/magjac/d3-graphviz) and
-[@hpcc-js/wasm](https://github.com/hpcc-systems/hpcc-js-wasm) for rendering
-graphs and [KaTeX](https://katex.org) for displaying LaTeX notation.
+The app uses [@hpcc-js/wasm](https://github.com/hpcc-systems/hpcc-js-wasm) for
+rendering graphs and [KaTeX](https://katex.org) for displaying LaTeX notation.
 The idea for the model, together with its interpretation, is a spin-off
 of my earlier project [Hypergraph](https://github.com/met4citizen/Hypergraph).
 
@@ -25,7 +24,7 @@ of my earlier project [Hypergraph](https://github.com/met4citizen/Hypergraph).
 
 In physical reality all the possible sequences of interactions happen.
 Relative to each other, these sequences can be either consistent or
-inconsistent. Only consistent (*spacelike*) sequences can interact.
+inconsistent. Only consistent (i.e. *spacelike*) sequences can interact.
 
 In our model, sequences are thought of as maximal paths in a directed
 [bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph).
@@ -39,22 +38,24 @@ $B$ and
 $C$ don't have to be consistent with each other.
 This gives the system many of its quantum mechanical properties.
 
-Measurement is the process in which some part (*the observer*) interacts
-with some other spacelike part (*the system*) in a way that resolves
+Measurement is the process in which some part (*observer*) interacts
+with some other spacelike part (*system*) in a way that resolves
 all these second-order inconsistencies. The result is a set of mutually
 inconsistent outcomes in each of which every pair is consistent.
-In graph theory, these are called maximal
+In graph theory, these kind of subgraphs are called maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 
 There are typically many sequences (*permutations*, *ordered sets*) that
 lead to the same maximal clique
 (*[image](https://en.wikipedia.org/wiki/Image_%28mathematics%29)*,
 *unordered set*). From the observer's point of view, the proportion of all
-the sequences that lead to each maximal clique is the probability
-(*weight*) of that outcome.
+the sequences that lead to each maximal clique is the probability, or more
+precisely, the *weight*, of that outcome.
 
 
 ## The Model
+
+#### Basic concepts
 
 Let $G$ be a directed
 [bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
@@ -68,24 +69,27 @@ to a new set of events that produces the next generation of tokens.
 
 $\displaystyle\qquad L_{token}=\big\lbrace v \in V_{token}\mid\mathbf{deg^+} (v)=0 \big\rbrace$
 
-Two tokens are spacelike, iff all their
+Two tokens are spacelike if and only if their
 [lowest common ancestors](https://en.wikipedia.org/wiki/Lowest_common_ancestor)
 (LCA) are events. This means that the concept of space $S(X)\subset L_{token}$
 is always relative to some observer $X\subset L_{token}$.
 
 $\displaystyle\qquad S(X)=\big\lbrace v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v): a \in V_{event}\big\rbrace$
 
-Let the [sample space](https://en.wikipedia.org/wiki/Sample_space)
-$\Omega$ be some subset of the space.
+#### Probabilities
+
+Let the [sample space](https://en.wikipedia.org/wiki/Sample_space) $\Omega$
+be some subset of the space $S$ relative to an observer
+$X$.
 
 $\displaystyle\qquad\Omega\subseteq S(X)$
 
-One way to find all the possible measurement outcomes $\mathcal{F}$ is to
-first enumerate all the possible sequences of interactions and then take their
+One way to find all the measurement outcomes $\mathcal{F}$ is to
+first enumerate all the sequences of interactions and then take their
 images. The problem is that the number of sequences grows factorially and
 the algorithm has time complexity $O(n!)$.
 
-Instead we can think of $\Omega$ as an undirected graph in which each token's
+Instead we let $\Omega$ induce an undirected graph in which each token's
 [neighbourhood](https://en.wikipedia.org/wiki/Neighbourhood_%28graph_theory%29)
 $N(v)$ is the set of all spacelike tokens relative to that token.
 
@@ -93,10 +97,9 @@ $\displaystyle\qquad N(v) = S(v)\cap \Omega,\quad v\in\Omega$
 
 The outcomes $\mathcal{F}$ are this graph's maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
-The clique problem is NP-complete, but typically solvable within our sample
-space sizes.
 
-In the app we use a variant of the
+Finding all maximal cliques is an NP-complete problem, but solvable
+within our sample space sizes. In the app we use a variant of the
 [Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron–Kerbosch_algorithm)
 with the worst-case time complexity $O(3^{n\over 3})$ and for
 [k-degenerate graphs](https://en.wikipedia.org/wiki/Degeneracy_%28graph_theory%29)
@@ -116,27 +119,68 @@ ALGORITHM BK(R, P, X) IS
 ```
 
 Let $p_j$ be the proportion of all the consistent interactions leading to
-the clique $\mathcal{F_j}\in\mathcal{F}$. Informally we call it the probability
-of the outcome. However, if we buy into the philosophy that all the consistent
-interactions are realized, we should instead regard it as a branch weight.
+the clique $\mathcal{F_j}\in\mathcal{F}$.
 
 $\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k} |\mathcal{F_k}|!}},\quad j\in\{1,\dots,|\mathcal{F}|\}$
 
-Using the above definition, we can calculate the proportion $\lambda_i$
-in which the token $v_i\in\Omega$ will be a part of the possible outcomes.
+Informally $p_j$ is the probability of the outcome
+$\mathcal{F_j}$. However, if we buy into the philosophy that all the consistent
+interactions are realized, we should really think of it as a clique weight.
+
+Based on these weights, we can calculate the weight $\lambda_i$ for the
+token $v_i\in\Omega$ to be included in some (any) clique.
 
 $\displaystyle\qquad \lambda_i=\sum_{j}\mathbf{1}_\mathcal{F_j}{(v_i)} p_j,\quad i\in\{1,\dots,|\Omega|\}$
 
-### Entropy
 
-Based on the classical probabilities we can calculate the
-[Shannon entropy](https://en.wikipedia.org/wiki/Entropy_%48information_theory%49)
+#### Energy & Entropy
+
+Let $E_{free}$ be the system's free energy. Here one interaction is
+considered equivalent to one unit of energy.
+
+$\displaystyle\qquad E_{free} = \sum_j |\mathcal{F_j}||\mathcal{F_j}|!$
+
+The observer gets only one sequence at measurement, so the expected energy
+$\langle E\rangle$ can be calculated by using the clique weights and sizes.
+
+$\displaystyle\qquad \langle E\rangle = \sum_j p_j|\mathcal{F_j}|$
+
+Using the clique weights we can also calculate the
+[Shannon entropy](https://en.wikipedia.org/wiki/Entropy_%28information_theory%29)
 $H_1$.
 
 $\displaystyle\qquad H_1 = -\sum_j p_j \log p_j$
 
+Suppose we start with the
+[past hypothesis](https://en.wikipedia.org/wiki/Past_hypothesis)
+so that all the tokens in $\Omega$ are mutually consistent. It means that
+the system has the lowest entropy and the highest free energy.
 
-### Density matrix
+$\displaystyle\qquad H_{1,min} = 0,\quad E_{max} = |\Omega| |\Omega|!$
+
+If the system interacts only with itself, it tends to become more
+inconsistent over time following the
+[second law of thermodynamics](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics).
+Eventually the system will reach its highest entropy state with the
+lowest free energy.
+
+$\displaystyle\qquad H_{1,max} = - \log \frac{1}{|\Omega|},\quad E_{min} = |\Omega|$
+
+Unfortunately the Shannon entropy doesn't tell us anything about
+the overlap of the states. In order to measure the system's entanglement,
+we define $D_{A,B}$ as the overlap between two cliques and extend the
+approach to all combinations.
+
+$\displaystyle\qquad D_{A,B} = {{2|A\cap B|}\over{|A|+|B|}}$
+
+$\displaystyle\qquad D = {{\sum 2|A\cap B|}\over{\sum(|A|+|B|)}},\quad \{A,B\}\in\binom{\mathcal{F}}{2}$
+
+If $D=0$, none of the outcome overlap.
+If $D=1$, all the outcomes are the same.
+The measure is not defined with only one outcome.
+
+
+#### Density matrix
 
 The pure quantum state of each clique can be presented as a linear combination
 of orthonormal vectors $|\phi_i\rangle$ representing the tokens
@@ -150,14 +194,19 @@ is the weighted sum of the outer products of the pure states.
 
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
-*Note: The density matrix, as it is described here, is just a limited
-projection. It can't represent the detailed ancestral structure. The bipartite
-graph itself is the actual data structure of the model.*
+Based the overlap of two cliques $D_{A,B}$ we can calculate their
+relative phase $\theta_{A,B}$ in radians.
+
+$\displaystyle\qquad \theta_{A,B} = (1 - D_{A,B})\frac{\pi}{2}$
+
+Note that the density matrix, as it is described here, is a limited
+projection and unable to represent the detailed ancestral structure.
+The bipartite graph is the actual data structure of the model.
 
 
-### Computational Basis
+#### Computational Basis
 
-From the observer's point of view all the tokens are identical. It also means,
+From the observer's point of view all the tokens are identical. It means
 that they can't distinguish between two local cliques with the same number
 of tokens. At measurement they can, however, distinguish the number of
 interactions (i.e. energy), which is proportional to the size of the clique.
@@ -166,22 +215,22 @@ So, in order to create a two-state system that the observer can use for
 computation, we can define a [qubit](https://en.wikipedia.org/wiki/Qubit)
 so that $|0\rangle$ represents cliques of size one (ground state) and
 $|1\rangle$ cliques of size two (first excited state). This scheme
-generalises to d-state system i.e. qudits.
+generalises to d-state system i.e. *qudits*.
 
 
 ## The Editor
 
 The bipartite graph on the app describes one possible set of consistent
 sequences relative to the observer. It doesn't follow sequences that have
-become inconsistent with the observer, because they can't interact with
-each other.
+become inconsistent with the observer, because the two parts can't interact
+with each other.
 
 To ensure consistency, **the editor only allows new edges between spacelike
 elements**.
 
 SYMBOL| DESCRIPTION
 :-: | :--
-![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symboltoken.svg)<br/><sup>TOKEN</sup> | Tokens are abstract elements. The number inside the symbol $[0,1]$ represent the probability $\lambda$ that the token would end up being a part of some (any) classical state at (hypothetical) measurement.
+![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symboltoken.svg)<br/><sup>TOKEN</sup> | Tokens are abstract elements. The value inside the symbol represent the weight $\lambda\in [0,1]$ of the token. Informally it is the probability that the token would end up being a part of some (any) classical state at (hypothetical) measurement.
 ![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symbolevent.svg)<br/><sup>EVENT</sup> | Events use tokens as input and produce tokens as output.
 ![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symboledge.svg)<br/><sup>EDGE</sup> | Directed edges represent input/output relations between tokens and events. Only consistent (i.e. spacelike) connections are allowed.
 ![](https://raw.githubusercontent.com/met4citizen/BigraphQM/8986cdd6802723d6662111ef943479f5b3eed3f7/img/symbolobs.svg)<br/><sup>OBSERVER</sup> | Observer represents a classical system relative to which probabilities are calculated. The observer, too, is a bipartite subgraph, but instead of showing individual tokens and events, they are grouped together for simplicity.
@@ -190,11 +239,11 @@ SYMBOL| DESCRIPTION
 
 User Actions / Shortcuts:
 
-- Click on a token/event to select it. Remove all the selections by clicking
-on the background.
+- Click on a token/event/clique to select it. Remove all the selections by
+clicking on the background.
 - Double click on a token/event to add a new branch.
 - Drag a token/event on top of another event/token to connect the two with an
-edge. Note: Only consistent (i.e. spacelike) connections are allowed.
+edge. Note: Only consistent (*spacelike*) connections are allowed.
 - Drag a token to an empty space before or after another token to reorder the
 tokens.
 - Click on an edge to select it.

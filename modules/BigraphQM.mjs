@@ -62,6 +62,20 @@ class BigraphQM extends Bigraph {
 	}
 
 	/**
+	* Represent degree as
+	* @param {number} d Degrees
+	* @return {String} String
+	*/
+	degreeToString(d) {
+		let s;
+		switch(d) {
+			case 0: s = '0'; break;
+			default: s = d + '°'; break;
+		}
+		return s;
+	}
+
+	/**
 	* Parity of a permutation.
 	* @param {Object[]} p Permutation of (0,1,...,n)
 	* @return {number} Parity 1=even/-1=odd
@@ -169,6 +183,7 @@ class BigraphQM extends Bigraph {
 		for( let t=this.updatetime; t<=this.time; t+=2) {
 			// Clear previous values
 			const omega = this.types([1],t); // measure space tokens
+			let n = omega.length;
 
 			// METHOD #1
 			this.M2.delete(t);
@@ -190,14 +205,30 @@ class BigraphQM extends Bigraph {
 				});
 			});
 
-			// Entropy
-			let h = - p.reduce( (a,b) => a + (b ? (b * Math.log2(b)) : 0), 0 );
+			// Energy and entropy
+			const ef = f.reduce( (a,b) => { // Total free energy
+				return a + BigInt(b.length) * this.factorial( b.length );
+			}, BigInt(0));
+			const ee = f.reduce( (a,b,i) => { // Expected energy at measurement
+				return a + p[i] * b.length;
+			}, 0);
+			const h1 = - p.reduce( (a,b) => a + (b ? (b * Math.log2(b)) : 0), 0 );
+
+			// Overlap D
+			let ek = 0;
+			let ekmax = 0;
+			for(let i=0; i<f.length-1; i++) {
+				for(let j=i+1; j<f.length; j++) {
+					ek += 2 * f[i].filter( x => f[j].includes(x) ).length; // Intersection
+					ekmax += f[i].length + f[j].length;
+				}
+			}
+			let d = f.length === 1 ? NaN : (ekmax ? ek/ekmax : 0);
 
 			// Set measurement results
-			this.M1.set(t,{ omega: omega, f: f, p: p, e: e, h: h });
+			this.M1.set(t,{ omega: omega, f: f, p: p, ef: ef, ee: ee, h1: h1, d: d });
 
 			// METHOD #2
-			let n = omega.length;
 
 			// Normalized hypervectors for each clique
 			let hvs = Array(f.length).fill().map( (x,i) => {
@@ -218,6 +249,18 @@ class BigraphQM extends Bigraph {
 					}
 				}
 			});
+
+			// Relative phases
+			let theta = Array(f.length).fill().map( x => Array(f.length).fill(0) );
+			for(let i=0; i<f.length-1; i++) {
+				for(let j=i+1; j<f.length; j++) {
+					let t1 = 2 * f[i].filter( x => f[j].includes(x) ).length; // Intersection
+					let t2 = f[i].length + f[j].length;
+					let th = this.round( (1 - (t1/t2)) * 90, 0 );
+					theta[i][j] = -th;
+					theta[j][i] = th;
+				}
+			}
 
 			// Computational basis
 			let maxl = Math.max( ...f.map( x => x.length ) );
@@ -240,7 +283,7 @@ class BigraphQM extends Bigraph {
 					}
 				}
 			});
-			this.M2.set(t,{ rho: m, rhoc: mc });
+			this.M2.set(t,{ rho: m, theta: theta, rhoc: mc });
 		}
 		this.updatetime = this.time;
 	}
@@ -353,8 +396,12 @@ class BigraphQM extends Bigraph {
 		// Final status, method 1
 		let m = this.M1.get( this.time );
 		if ( m ) {
-			ss = 'Sample space:\n<table><tr><td>\\(\\quad\\Omega = \\)</td><td>{' + m.omega.map(x => this.pos(x)).join(',&#8203;') + '}</td></tr></table>';
-			ss += 'Maximal cliques:\n<table><tr><td>\\(\\quad\\mathcal{F} = \\)</td><td>{' + m.f.map( x => '{'+x.map( y => this.pos(y) ).join(',&#8203;')+'}' ).join(',&#8203;') + '}</td></tr></table>';
+			ss = 'Sample space, \\(|\\Omega|=' + m.omega.length + '\\):\n<table>';
+			ss += '<tr><td>\\(\\quad\\Omega = \\)</td><td>{' + m.omega.map(x => this.pos(x)).join(',&#8203;') + '}</td></tr>';
+			ss += '</table>';
+			ss += 'Maximal cliques, \\(|\\mathcal{F}|=' + m.f.length + '\\):\n<table>';
+			ss += '<tr><td>\\(\\quad\\mathcal{F} = \\)</td><td>{' + m.f.map( x => '{'+x.map( y => this.pos(y) ).join(',&#8203;')+'}' ).join(',&#8203;') + '}</td></tr>';
+			ss += '</table>';
 			ss += 'Probabilities:\n<table><tr><td>\\(\\quad Pr = \\)</td><td>(' + m.p.map( x => this.round(x,2,true) ).join(',&#8203;')+')</td></tr></table>';
 			s.push( { id: "d1", text: ss });
 		}
@@ -373,19 +420,34 @@ class BigraphQM extends Bigraph {
 				ss += '</tr>';
 			});
 			ss += '</table></td><tr></table>';
+			s.push( { id: "d3", text: ss });
+
+			ss = '<table><tr><td class="vmiddle">\\(\\theta = \\)</td><td>';
+			ss += '<table class="densitymatrix">';
+			m.theta.forEach( (x,i) => {
+				ss += '<tr>';
+				x.forEach( y => {
+					let v = this.degreeToString( y );
+					ss += '<td>' + v +  '</td>';
+				});
+				ss += '</tr>';
+			});
+			ss += '</table></td><tr></table>';
 			s.push( { id: "d4", text: ss });
 
 			const fmt = {
 			  notation: 'scientific',
 			  maximumFractionDigits: 2
 			};
-			ss = '<table class="timetable"><thead><tr><th>\\(t\\)</th><th>\\(\\sum |\\mathcal{F_j}|!\\)</th><th>\\(H_1\\)</th></thead></tr><tbody>'
+			ss = '<table class="timetable"><thead><tr><th>\\(t\\)</th><th>\\(E_{free}\\)</th><th>\\(\\langle E\\rangle\\)</th><th>\\(H_1\\)</th></th><th>\\(D\\)</th></thead></tr><tbody>'
 			let l = m.length;
 			for( let t=this.inittime; t<=this.time; t+=2) {
 				let m1 = this.M1.get(t);
-				let estr = (m1.e > 10000n ) ? m1.e.toLocaleString( 'en-US', fmt ) : Number(m1.e).toString();
-				let hstr = this.round(m1.h,2,true);
-				ss += '<tr><td>' + t + '</td><td>' + estr + '</td><td>' + hstr + '</td></tr>';
+				let efstr = (m1.ef > 10000n ) ? m1.ef.toLocaleString( 'en-US', fmt ) : Number(m1.ef).toString();
+				let eestr = this.round(m1.ee,1,true);
+				let h1str = this.round(m1.h1,2,true);
+				let dstr = this.round(m1.d,2,true);
+				ss += '<tr><td>' + t + '</td><td>' + efstr + '</td><td>' + eestr + '</td><td>' + h1str + '</td><td>' + dstr +'</td></tr>';
 			}
 			ss += '</tbody></table>';
 			s.push( { id: "d5", text: ss });

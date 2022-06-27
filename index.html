@@ -3,7 +3,7 @@
   <title>BigraphQM</title>
 
   <meta charset="utf-8">
-  <meta content="width=device-width, height=device-height, minimum-scale=1.0, initial-scale=1.0, user-scalable=no" name="viewport">
+  <meta content="width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no" name="viewport">
 
   <link rel="icon" type="image/png" href="favicon.png">
 
@@ -14,22 +14,22 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfRI7mLTdk1wblIUnrIq35nqwEvC" crossorigin="anonymous">
   <style>
-  html{ width:100%; height:100%; font-size: 16px; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.3px;}
-  body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1.5rem;  overflow: hidden; text-align: left; touch-action: manipulation; }
+  html{ width:100%; height:100%; font-size: 1vw; font-family: Verdana, Geneva, sans-serif; letter-spacing: -0.02vw;}
+  body{ width: 100%; height: 100%; margin: 0; padding: 0; background-color: lightblue; color: black; line-height:1vw; overflow: hidden; text-align: left; touch-action: manipulation; }
   table { margin: 10px 0; border-collapse: collapse; }
   td { vertical-align: top; width: auto; overflow-wrap:break-word; }
   td.vmiddle { vertical-align: middle; }
   .densitymatrix { white-space: nowrap; margin: 0 0 0 10px; border-left: 1px solid black; border-right: 1px solid black; border-radius: 6px; }
   .densitymatrix td { margin:auto; text-align: center; padding: 2px; min-width:20px; }
   .timetable { border: 1px solid black; }
-  .timetable th, .timetable td { margin:auto; text-align: center; padding: 2px; min-width:60px; border: 1px solid black; }
+  .timetable th, .timetable td { margin:auto; text-align: center; padding: 2px; min-width:50px; border: 1px solid black; }
   .katex { font-size: 1em; }
 
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background-color: rgba(119, 136, 153, 0.5); border: transparent; }
 
-  #outer{ display: flex; position: absolute; top: 56px; left:0; right:0; bottom:0; margin:0; padding:0; background-color: lightblue;}
+  #outer{ display: flex; position: absolute; top: 6vw; line-height: 1vw; left:0; right:0; bottom:0; margin:0; padding:0; background-color: lightblue;}
   #bigraph{ flex: 1; margin: 2px 0 2px 2px; padding:0; overflow:scroll; vertical-align:top; text-align: center; scrollbar-color: rgba(155, 155, 155, 0.5) transparent; scrollbar-width: thin; border: 2px solid lightslategray; background-color: white;}
   #bigraph svg { margin: 30px 50px 200px 50px; }
   #resizer{ flex: 0 0 4px; background-color: lightblue; border:0; margin:0; padding:0; pointer-events: none; }
@@ -41,14 +41,14 @@
   details p { display: block; margin: 0 0 0 30px; padding: 5px 0;  white-space: pre-line; overflow-wrap: break-word; }
 
 
-  .toolkit { position: fixed; z-index: 3; opacity: 0.6; cursor: default; pointer-events: none;}
-  #topleft { top:0; left: 0; margin: 0 0 0 5px; padding: 4px; }
-  #topright { top:0; right: 0; margin: 0 10px 0 0; padding: 4px; }
-  .command, .setting { margin:0; padding:2px; display: inline-block; background-color: transparent; color: black; width: 26px; height: 26px; border: 0; border-radius: 3px; font-size: 16px; font-weight: bold; line-height:26px; text-align: center; vertical-align: middle; cursor: pointer; pointer-events: auto; }
-  .command svg, .setting svg { margin: 0; padding: 0; width: 26px; height: 26px; }
-  .subtitle { position: absolute; font-size: 10px; font-weight: bold; color: black; margin-top: 26px; margin-left: 12px; transform: translate(-50%,0);}
-  .subtitle2 { position: absolute; font-size: 10px; font-weight: bold; color: black; margin-top: 30px; margin-left: -2px; transform: translate(-50%,0); pointer-events: none;}
-  .vl { margin:0 8px; }
+  .toolkit { position: fixed; z-index: 3; opacity: 0.6; font-size: 1vw; color: black; text-align: center; vertical-align: middle; font-weight: bold; line-height: 3vw; cursor: default; pointer-events: none;}
+  #topleft { top:0.1vw; left: 0; margin: 0 0 0 0.3vw; padding: 0.3vw; }
+  #topright { top:0.1vw; right: 0; margin: 0 1vw 0 0; padding: 0.3vw; }
+  .command, .setting { display:inline-block; margin:0; padding: 0; background-color: transparent; width: 3vw; height: 3vw; border: 0; border-radius: 0.5vw; cursor: pointer; pointer-events: auto; }
+  .command svg, .setting svg { display:inline-block; margin: 0; padding: 0; width: 3vw; height: 3vw; }
+  .subtitle { display:inline-block; position: absolute; color: black; margin-top: 3vw; margin-left: 1.3vw; transform: translate(-50%,0); }
+  .subtitlemid { display:inline-block; position: absolute; margin-top: 3vw; margin-left: -2px; transform: translate(-50%,0); pointer-events: none; }
+  .vl { display:inline-block; width: 1vw; }
   .command:active, .setting:active, .selected { background-color: black; color: white; }
   .disabled { opacity: 0.2; pointer-events: none; }
 
@@ -58,16 +58,14 @@
   a { cursor: pointer; pointer-events: auto; }
 
   #logo { margin: 3px; padding: 3px; position: fixed; z-index: 3; opacity: 0.6; bottom: 0; left: 2px; }
-  #logo img { float:left; margin: 0; padding: 0; width: 32px; height: 32px; }
-  #logo a { display:inline-block; margin: 16px 0 0 5px; font-size: 8px; font-family: Geneva; color: grey;  }
+  #logo img { float:left; margin: 0; padding: 0; width: 3vw; height: 3vw; }
 
   .noselect { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 </style>
 
-<script nomodule>alert("You browser doesn't seem to support modules. Use a modern desktop browser to run BigraphQM.");</script>
+<script nomodule>alert("You browser doesn't seem to support modules. Use a modern browser to run BigraphQM.");</script>
 <script src="https://d3js.org/d3.v6.min.js"></script>
-<script src="https://unpkg.com/@hpcc-js/wasm@1.12.8/dist/index.min.js" type="javascript/worker"></script>
-<script src="https://unpkg.com/d3-graphviz@4.1.1/build/d3-graphviz.js"></script>
+<script src="https://unpkg.com/@hpcc-js/wasm@1.14.1/dist/index.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js" integrity="sha384-X/XCfMm41VSsqRNQgDerQczD69XqmjOOOwYQvr/uuC+j4OPoNhVgjdGFwhvN02Ja" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"></script>
 
@@ -86,42 +84,40 @@ function getUrlParameter(name) {
 }
 
 // Global variables
+let hpccWasm = window["@hpcc-js/wasm"]; // DOT parser
 let scale = 1.5; // Zoom level
 let selected = []; // User selected titles
+let selectedCliques = []; // User selected cliques
 let dragstart = null; // User adding a new edge by dragging
 let lastTouched = null; // Used to implement double click in touch devices
-let lastTouch = null; // Used to implement double click in touch devices
-let graphviz = null; // Graphviz engine
+let lastTouchTime = null; // Used to implement double click in touch devices
 let bigraphw = '66%'; // Initial graph window width
 
-// Scale SVG based on current zoom level
-function attributer(datum, index, nodes) {
-  if (datum.tag == 'svg') {
-    const w = 4 * scale * datum.attributes.viewBox.split(' ')[2] / 3;
-    const h = 4 * scale * datum.attributes.viewBox.split(' ')[3] / 3;
-    datum.attributes = { ...datum.attributes, width: w+'px', height: h+'px' };
-  }
-}
 
-// The graphviz renderer has finished all actions
+// The DOT renderer has finished all actions
 function ready() {
-  // Add app specific SVG defs and symbols
+  // Scale SVG based on current zoom level
   let svg = d3.select('svg');
+  const viewBox = svg.node().attributes.viewBox.value.split(' ').map(Number);
+  svg.node().attributes.width.value = (4 * scale * viewBox[2] / 3) + 'px';
+  svg.node().attributes.height.value = (4 * scale * viewBox[3] / 3) + 'px';
+
+  // Add app specific SVG defs
   svg.append( () => d3.select('#svgdefs > defs').clone(true).node() );
-  svg.selectAll('.observer > text')
-    .each( function(d) {
-      d3.select(this.parentNode).append('svg:use')
-        .attr('xlink:href','#obs')
-        .attr('x', d.center.x - 8).attr('y', d.center.y - 11)
-        .attr('width', '16').attr('height', '16');
-    });
-  svg.selectAll('.environment > text')
-    .each( function(d) {
-      d3.select(this.parentNode).append('svg:use')
-        .attr('xlink:href','#env')
-        .attr('x', d.center.x - 8).attr('y', d.center.y - 11)
-        .attr('width', '16').attr('height', '16');
-    });
+
+  // Add app specific SVG symbols
+  svg.selectAll('.observer > text').nodes().forEach( x => {
+    d3.select(x.parentElement).append('svg:use')
+      .attr('xlink:href','#obs')
+      .attr('x', parseInt(x.attributes.x.value) - 8).attr('y', parseInt(x.attributes.y.value) - 11)
+      .attr('width', '16').attr('height', '16');
+  });
+  svg.selectAll('.environment > text').nodes().forEach( x => {
+    d3.select(x.parentElement).append('svg:use')
+      .attr('xlink:href','#env')
+      .attr('x', parseInt(x.attributes.x.value) - 8).attr('y', parseInt(x.attributes.y.value) - 11)
+      .attr('width', '16').attr('height', '16');
+  });
 
   // Disable/enable editing
   let isC = d3.select('#classical').classed('selected');
@@ -148,7 +144,7 @@ function ready() {
       .on('mousedown touchstart', function(e,d) {
         e.preventDefault();
         e.stopPropagation();
-        let title = d3.select(this).selectWithoutDataPropagation('title').text();
+        let title = d3.select(this).select('title').text();
         let svg = d3.select('svg');
         if (window.TouchEvent && e instanceof TouchEvent) e = e.touches[0];
         let x = d3.pointer(e,svg.node())[0];
@@ -188,9 +184,9 @@ function ready() {
                 s.classed('token') ||
                 s.classed('event') ||
                 s.classed('environment') ) {
-                title = s.selectWithoutDataPropagation('title').text();
+                title = s.select('title').text();
               } else if ( s.classed('order') ) {
-                let titles = s.selectWithoutDataPropagation('title').text().split('->');
+                let titles = s.select('title').text().split('->');
                 let svg = d3.select('svg');
                 let x = d3.pointer(e.changedTouches[0],svg.node())[0];
                 title = titles[ (x>dragstart.x ? 0 : 1) ];
@@ -198,7 +194,7 @@ function ready() {
               }
             }
           } else {
-            title = d3.select(this).selectWithoutDataPropagation('title').text();
+            title = d3.select(this).select('title').text();
           }
 
           const v1 = qm.v(dragstart.title);
@@ -217,15 +213,16 @@ function ready() {
               } else {
                 if ( v1 == v2 ) {
                   let now = new Date().getTime();
-                  if ( lastTouch && lastTouched == v1 && (now - lastTouch) < 300 ) {
+                  if ( lastTouchTime && lastTouched == v1 && (now - lastTouchTime) < 300 ) {
                     qm.addBranch(v1);
                   } else if ( selected.includes(title) ) {
                     selected.splice( selected.indexOf(title), 1);
                   } else {
+                    selectedCliques.length = 0; // Clear clique selections
                     selected.push(title);
                   }
                   lastTouched = v1;
-                  lastTouch = now;
+                  lastTouchTime = now;
                   render(false);
                 } else {
                   if ( qm.isEdge(v1,v2) ) {
@@ -241,46 +238,61 @@ function ready() {
         }
       }, {passive: false});
 
-      // Ordering
-      d3.selectAll('.order').on('mouseup', function(e,d) {
-        if (dragstart) {
-          e.preventDefault();
-          e.stopPropagation();
-          let titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
-          let x = d3.pointer(e,this)[0];
-          d3.select('.dragline').style('marker-end', '').classed('hidden', true);
-          const vfrom = qm.v(dragstart.title);
-          const vto = qm.v(titles[ (x>dragstart.x ? 0 : 1) ]);
-          if ( vfrom && vto && vfrom !== vto && vfrom.type == 1 && vfrom.time === vto.time ) {
-            qm.move(vfrom,vto);
-          }
-          dragstart = null;
-          d3.select('svg').classed('dragged',false);
-          render();
+    // Ordering
+    d3.selectAll('.order').on('mouseup', function(e,d) {
+      if (dragstart) {
+        e.preventDefault();
+        e.stopPropagation();
+        let titles = d3.select(this).select('title').text().split('->');
+        let x = d3.pointer(e,this)[0];
+        d3.select('.dragline').style('marker-end', '').classed('hidden', true);
+        const vfrom = qm.v(dragstart.title);
+        const vto = qm.v(titles[ (x>dragstart.x ? 0 : 1) ]);
+        if ( vfrom && vto && vfrom !== vto && vfrom.type == 1 && vfrom.time === vto.time ) {
+          qm.move(vfrom,vto);
         }
-      }, {passive: false});
+        dragstart = null;
+        d3.select('svg').classed('dragged',false);
+        render();
+      }
+    }, {passive: false});
 
-      d3.selectAll('.link')
-        .on('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          const titles = d3.select(this).selectWithoutDataPropagation('title').text().split('->');
-          let now = new Date().getTime();
-          if ( lastTouch && lastTouched == titles.join(",") && (now - lastTouch) < 300 ) {
-            const v1 = qm.v( titles[0] );
-            const v2 = qm.v( titles[1] );
-            if ( v1 && v2 ) qm.delEdge(v1,v2);
-            selected.length = 0;
-            render();
-          } else {
-            lastTouched = titles.join(",");
-            lastTouch = now;
-            selected.length = 0;
-            selected.push( ...titles );
-            render(false);
-          }
-        });
-    }
+    d3.selectAll('.link')
+      .on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const titles = d3.select(this).select('title').text().split('->');
+        let now = new Date().getTime();
+        if ( lastTouchTime && lastTouched == titles.join(",") && (now - lastTouchTime) < 300 ) {
+          const v1 = qm.v( titles[0] );
+          const v2 = qm.v( titles[1] );
+          if ( v1 && v2 ) qm.delEdge(v1,v2);
+          selected.length = 0;
+          render();
+        } else {
+          lastTouched = titles.join(",");
+          lastTouchTime = now;
+          selected.length = 0;
+          selected.push( ...titles );
+          render(false);
+        }
+      });
+  }
+
+  // Select clique
+  d3.selectAll('.clique')
+    .on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const title = d3.select(this).select('title').text();
+      if ( selectedCliques.includes(title) ) {
+        selectedCliques.splice( selectedCliques.indexOf(title), 1);
+      } else {
+        selected.length = 0; // Clear other selections
+        selectedCliques.push(title);
+      }
+      render(false);
+    });
 }
 
 // Reader graph
@@ -311,18 +323,23 @@ function render( changed=true ) {
     let dot = '';
     let isC = d3.select('#classical').classed('selected');
     if ( isC ) {
-      dot = qm.dotC(); // Classical states
+      dot = qm.dotC(selectedCliques); // Classical states
     } else {
       if ( dragstart ) {
-        dot = qm.dotQ([ dragstart.title ]); // Quantum states (editor mode)
+        dot = qm.dotQ([ dragstart.title ],selectedCliques); // Quantum states (editor mode)
       } else {
-        dot = qm.dotQ(selected); // Quantum states (editor mode)
+        dot = qm.dotQ(selected,selectedCliques); // Quantum states (editor mode)
       }
     }
 
-    // Status
-    let txt = '';
-    qm.status(selected).forEach( (x,i) => {
+    // Render DOT
+    hpccWasm.graphviz.layout(dot).then(svg => {
+      document.getElementById("bigraph").innerHTML = svg;
+      ready();
+    }).catch(err => console.error(err.message));
+
+    // Display status
+    qm.status(selected,selectedCliques).forEach( (x,i) => {
       d3.select('details#'+x.id+">p").html(x.text);
     });
     let url = window.location.href.split('?')[0] +
@@ -338,9 +355,6 @@ function render( changed=true ) {
       ],
       throwOnError : false
     });
-
-    // Render
-    graphviz.renderDot(dot);
   }
   catch(ex) {
     console.log(ex);
@@ -350,25 +364,11 @@ function render( changed=true ) {
 
 document.addEventListener('DOMContentLoaded', function(e) {
 
-  // Graphviz engine
-  graphviz = d3.select('#bigraph').graphviz()
-      .scale(1)
-      .fit(false)
-      .zoom(false)
-      .fade(false)
-      .tweenShapes(false)
-      .tweenPaths(false)
-      .attributer(attributer)
-      .onerror((ex) => {
-        console.log(ex);
-        alert(ex);
-      })
-      .on('end', ready);
-
   // Click outside the graph, clear all previous selections
   d3.select('#bigraph').on('click', function(e) {
-    if ( selected.length ) {
+    if ( selected.length || selectedCliques.length ) {
       selected.length = 0;
+      selectedCliques.length = 0;
       render(false);
     }
   });
@@ -406,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
   d3.select('#undo').on('click', function(e) {
     qm.undo();
     selected.length = 0;
+    selectedCliques.length = 0;
     render();
   });
 
@@ -413,6 +414,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
   d3.select('#redo').on('click', function(e) {
     qm.redo();
     selected.length = 0;
+    selectedCliques.length = 0;
     render();
   });
 
@@ -420,6 +422,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
   d3.select('#inctime').on('click', function(e) {
     qm.incTime();
     selected.length = 0;
+    selectedCliques.length = 0;
     render();
   });
 
@@ -427,6 +430,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
   d3.select('#dectime').on('click', function(e) {
     qm.decTime();
     selected.length = 0;
+    selectedCliques.length = 0;
     render();
   });
 
@@ -436,6 +440,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
       const v = qm.v(selected[0]);
       if (v) qm.addBranch(v);
       selected.length = 0;
+      selectedCliques.length = 0;
     }
     render();
   });
@@ -450,18 +455,21 @@ document.addEventListener('DOMContentLoaded', function(e) {
       if (v1 && v2) qm.delEdge(v1,v2);
     }
     selected.length = 0;
+    selectedCliques.length = 0;
     render();
   });
 
   // Make a proto-measurement
   d3.select('#measure').on('click', function(e) {
     qm.measure();
+    selectedCliques.length = 0;
     render();
   });
 
   // Add decoherence to the system
   d3.select('#decohere').on('click', function(e) {
     qm.decohere();
+    selectedCliques.length = 0;
     render();
   });
 
@@ -484,9 +492,8 @@ document.addEventListener('DOMContentLoaded', function(e) {
         break;
 
       case 'classical':
-        if (on) {
-          selected.length = 0;
-        }
+        selected.length = 0;
+        selectedCliques.length = 0;
         render(false);
         break;
     }
@@ -560,11 +567,15 @@ document.addEventListener('DOMContentLoaded', function(e) {
           <p></p>
         </details>
         <details id="d5">
-          <summary>ENTROPY \(\textbf{H}\)</summary>
+          <summary>ENERGY &amp; ENTROPY \(\textbf{(E, H)}\)</summary>
+          <p></p>
+        </details>
+        <details id="d3">
+          <summary>DENSITY MATRIX \(\boldsymbol{\rho}\)</summary>
           <p></p>
         </details>
         <details id="d4">
-          <summary>DENSITY MATRIX \(\boldsymbol{\rho}\)</summary>
+          <summary>PHASES \(\boldsymbol{\theta}\)</summary>
           <p></p>
         </details>
         <details id="d6">
@@ -572,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
           <p></p>
         </details>
         <details id="d998">
-          <summary>BIGRAPH URL</summary>
+          <summary>URL</summary>
           <p></p>
         </details>
         <details id="d999">
@@ -585,15 +596,15 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
   <div id="topleft" class="toolkit noselect">
     <span id="undo" class="command disabled" title="Undo"><svg viewBox="0 0 24 24" fill="none"><path d="M5.33929 4.46777H7.33929V7.02487C8.52931 6.08978 10.0299 5.53207 11.6607 5.53207C15.5267 5.53207 18.6607 8.66608 18.6607 12.5321C18.6607 16.3981 15.5267 19.5321 11.6607 19.5321C9.51025 19.5321 7.58625 18.5623 6.30219 17.0363L7.92151 15.8515C8.83741 16.8825 10.1732 17.5321 11.6607 17.5321C14.4222 17.5321 16.6607 15.2935 16.6607 12.5321C16.6607 9.77065 14.4222 7.53207 11.6607 7.53207C10.5739 7.53207 9.56805 7.87884 8.74779 8.46777L11.3393 8.46777V10.4678H5.33929V4.46777Z" fill="currentColor" /></svg></span>
-    <span class="subtitle2">UNDO</span>
+    <span class="subtitlemid">UNDO</span>
     <span id="redo" class="command disabled" title="Redo"><svg viewBox="0 0 24 24" fill="none"><path d="M13.1459 11.0499L12.9716 9.05752L15.3462 8.84977C14.4471 7.98322 13.2242 7.4503 11.8769 7.4503C9.11547 7.4503 6.87689 9.68888 6.87689 12.4503C6.87689 15.2117 9.11547 17.4503 11.8769 17.4503C13.6977 17.4503 15.2911 16.4771 16.1654 15.0224L18.1682 15.5231C17.0301 17.8487 14.6405 19.4503 11.8769 19.4503C8.0109 19.4503 4.87689 16.3163 4.87689 12.4503C4.87689 8.58431 8.0109 5.4503 11.8769 5.4503C13.8233 5.4503 15.5842 6.24474 16.853 7.52706L16.6078 4.72412L18.6002 4.5498L19.1231 10.527L13.1459 11.0499Z" fill="currentColor" /></svg></span>
     <span class="vl"></span>
     <span id="zin" class="command" title="Zoom in"><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.3431 15.2426C17.6863 12.8995 17.6863 9.1005 15.3431 6.75736C13 4.41421 9.20101 4.41421 6.85786 6.75736C4.51472 9.1005 4.51472 12.8995 6.85786 15.2426C9.20101 17.5858 13 17.5858 15.3431 15.2426ZM16.7574 5.34315C19.6425 8.22833 19.8633 12.769 17.4195 15.9075C17.4348 15.921 17.4498 15.9351 17.4645 15.9497L21.7071 20.1924C22.0976 20.5829 22.0976 21.2161 21.7071 21.6066C21.3166 21.9971 20.6834 21.9971 20.2929 21.6066L16.0503 17.364C16.0356 17.3493 16.0215 17.3343 16.008 17.319C12.8695 19.7628 8.32883 19.542 5.44365 16.6569C2.31946 13.5327 2.31946 8.46734 5.44365 5.34315C8.56785 2.21895 13.6332 2.21895 16.7574 5.34315ZM10.1005 7H12.1005V10H15.1005V12H12.1005V15H10.1005V12H7.10052V10H10.1005V7Z" fill="currentColor" /></svg></span>
-    <span class="subtitle2">ZOOM</span>
+    <span class="subtitlemid">ZOOM</span>
     <span id="zout" class="command" title="Zoom out"><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.3431 15.2426C17.6863 12.8995 17.6863 9.1005 15.3431 6.75736C13 4.41421 9.20101 4.41421 6.85786 6.75736C4.51472 9.1005 4.51472 12.8995 6.85786 15.2426C9.20101 17.5858 13 17.5858 15.3431 15.2426ZM16.7574 5.34315C19.6425 8.22833 19.8633 12.769 17.4195 15.9075C17.4348 15.921 17.4498 15.9351 17.4645 15.9497L21.7071 20.1924C22.0976 20.5829 22.0976 21.2161 21.7071 21.6066C21.3166 21.9971 20.6834 21.9971 20.2929 21.6066L16.0503 17.364C16.0356 17.3493 16.0215 17.3343 16.008 17.319C12.8695 19.7628 8.32883 19.542 5.44365 16.6569C2.31946 13.5327 2.31946 8.46734 5.44365 5.34315C8.56785 2.21895 13.6332 2.21895 16.7574 5.34315ZM7.10052 10V12H15.1005V10L7.10052 10Z" fill="currentColor" /></svg></span>
     <span class="vl"></span>
     <span id="dectime" class="command disabled" title="Delete layer"><svg viewBox="0 0 24 24" fill="none"><path d="M18 17L10 12L18 7V17Z" fill="currentColor" /><path d="M6 7H9V17H6V7Z" fill="currentColor" /></svg></span>
-    <span class="subtitle2">TIME</span>
+    <span class="subtitlemid">TIME</span>
     <span id="inctime" class="command" title="Add layer"><svg viewBox="0 0 24 24" fill="none"><path d="M6 17L14 12L6 7V17Z" fill="currentColor" /><path d="M18 7H15V12V17H18V7Z" fill="currentColor" /></svg></span>
     <span class="vl"></span>
     <span class="vl"></span>

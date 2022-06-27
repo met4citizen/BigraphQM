@@ -27,7 +27,7 @@ class BigraphQMDOT extends BigraphQM {
 		this.styleEnvironment = 'node [class=environment label="E"]';
 		this.styleEvent = 'node [class=event shape=circle image="" width=0.14 height=0.14 penwidth=0 fillcolor=grey label=""]';
 		this.styleToken = 'node [class=token width=0.28 height=0.28 penwidth=0 color=white label="0" colorscheme=orrd6 fillcolor=1]';
-		this.styleState = 'node [class=state shape=box width=0.4 height=0.3 label="0" colorscheme=orrd6 fillcolor=1]';
+		this.styleClique = 'node [class=clique shape=box width=0.4 height=0.3 label="0" colorscheme=orrd6 fillcolor=1]';
 
 		// Edge styles
 		this.styleEdge = 'edge [class=link penwidth=1.5 color=grey arrowhead=normal arrowsize=0.5 style=solid weight=1]';
@@ -38,6 +38,7 @@ class BigraphQMDOT extends BigraphQM {
 		this.styleSelSpace = 'penwidth=2 color=steelblue';
 		this.styleSelNode = 'penwidth=2 color=black';
 		this.styleSelLink = 'penwidth=2 color=black';
+		this.styleSelClique = 'penwidth=2 color=black';
 	}
 
 	/**
@@ -150,13 +151,14 @@ class BigraphQMDOT extends BigraphQM {
 	* @return {String}
 	*/
 	dotFinal() {
-		let s = '\n\n' + this.styleState + ' ' + this.styleEdge;
+		let s = '\n\n' + this.styleClique + ' ' + this.styleEdge;
 		const m = this.M1.get(this.time);
 		m.p.forEach( (x,i) => {
-			s += ' F' + i + ' [label="' + this.round(100*x) +
+			let title = 'C' + this.time + '_' + i;
+			s += ' ' + title + ' [label="' + this.round(100*x) +
 				'%" fillcolor=' + (this.round(x*5)+1) + ']';
 			m.f[i].forEach( y => {
-				if ( y.type === 1 ) s += ' ' + this.title(y) + '->F' + i;
+				if ( y.type === 1 ) s += ' ' + this.title(y) + '->' + title;
 			});
 		});
 		return s;
@@ -234,10 +236,11 @@ class BigraphQMDOT extends BigraphQM {
 
 	/**
 	* DOT Quantum
-	* @param {String[]} [titles=null] If specified, vertex to highlight
+	* @param {String[]} [titles=null] If specified, vertices to highlight
+	* @param {String[]} [titlesCliques=null] If specified, vertices to highlight
 	* @return {String}
 	*/
-	dotQ( titles=null ) {
+	dotQ( titles=null, titlesCliques=null ) {
 		if ( this.needsupdate ) this.refresh();
 
 		let s = '';
@@ -257,17 +260,23 @@ class BigraphQMDOT extends BigraphQM {
 		// Edges and selections
 		s += this.dotEdgesQ(selV,selSpace,selBranch);
 
+		// Selected cliques
+		if ( titlesCliques && titlesCliques.length ) {
+			titlesCliques.forEach( x => s += ' ' + x + ' [' + this.styleSelClique + ']' );
+		}
+
 		return 'digraph {\n\n' + this.cacheQ + s + '\n\n}';
 	}
 
 	/**
-	* DOT classical
+	* DOT cliques
+	* @param {String[]} [titlesCliques=null] If specified, vertices to highlight
 	* @return {String}
 	*/
-	dotC() {
+	dotC( titlesCliques=null ) {
 		if ( this.needsupdate ) this.refresh();
 
-		let s = '\n\n' + this.styleState + ' ' + this.styleEdge;
+		let s = '\n\n' + this.styleClique + ' ' + this.styleEdge;
 
 		// Edges
 		for( const v of this.V.values() ) {
@@ -280,23 +289,28 @@ class BigraphQMDOT extends BigraphQM {
 		}
 
 		// Classical states
-		let id = 0;
 		for( const [k,v] of this.M1.entries() ) {
 			let ordering = [ k+'.0' ];
 			v.p.forEach( (x,i) => {
-				s += ' C' + (++id) + ' [label="' + this.round(100*x) +
+				let title = 'C' + k + '_' + i;
+				s += ' ' + title + ' [label="' + this.round(100*x) +
 					'%" fillcolor=' + (this.round(x*5)+1) + ']';
-				ordering.push('C'+id);
+				ordering.push(title);
 				v.f[i].forEach( y => {
 					if ( y.type == 1 ) {
-						y.parent.forEach( z => s += ' ' + this.title(z) + '->C' + id );
-						y.child.forEach( z => s += ' C' + id + '->' + this.title(z) );
+						y.parent.forEach( z => s += ' ' + this.title(z) + '->' + title );
+						y.child.forEach( z => s += ' ' + title + '->' + this.title(z) );
 					}
 				});
 			});
 			ordering.push( k+'.'+(this.TIME.get(k).length-1) );
 			s += ' {' + this.styleOrdering + ' ' + ordering.join(' ');
 			s += ' ' + ordering.join('->') + '}';
+		}
+
+		// Selected cliques
+		if ( titlesCliques && titlesCliques.length ) {
+			titlesCliques.forEach( x => s += ' ' + x + ' [' + this.styleSelClique + ']' );
 		}
 
 		return 'digraph {\n\n' + this.cacheC + s + '\n\n}';
@@ -311,8 +325,10 @@ class BigraphQMDOT extends BigraphQM {
 		if ( obs && obs.length ) {
 			const s = this.space(obs,[1]);
 			if ( s && s.length ) {
-				const random = s[Math.floor(Math.random()*s.length)];
-				this.addEdge( random.parent[0], obs[0] );
+				const p = s.map( x => x.parent[0] ).filter( y => !this.isEdge(y,obs[0]) );
+				if ( p.length ) {
+					this.addEdge( p[Math.floor(Math.random()*p.length)], obs[0] );
+				}
 			}
 		}
 	}
@@ -324,10 +340,12 @@ class BigraphQMDOT extends BigraphQM {
 	decohere() {
 		const env = this.types([-2],this.time-2); // environment
 		if ( env && env.length ) {
-			const s = [ ...new Set( this.space(env,[1]).map( x => x.child ).flat() )].filter( y => y.parent.every(z => z.type > 0 ));
+			const s = [ ...new Set( this.space(env,[1]).map( x => x.child ).flat() )];
 			if ( s && s.length ) {
-				const random = s[Math.floor(Math.random()*s.length)];
-				this.addEdge( env[0], random );
+				const p = s.filter( y => y.parent.every(z => z.type > 0 ) && !this.isEdge(env[0],y) );
+				if ( p.length ) {
+					this.addEdge( env[0], p[Math.floor(Math.random()*p.length)] );
+				}
 			}
 		}
 	}
@@ -402,22 +420,24 @@ class BigraphQMDOT extends BigraphQM {
 	/**
 	* Get status.
 	* @param {String[]} [titles=null] Selected vertices
+	* @param {String[]} [titlesCliques=null] Selected cliques
 	* @return {Object[]} Status object
 	*/
-	status(titles=null) {
+	status(titles=null,titlesCliques=null) {
 		if ( this.needsupdate ) this.refresh();
 		let s = [];
 		let ss = '';
 
-		// Selection status
+		// Selection status for nodes
 		if (titles && titles.length > 0) {
+			ss += 'Selected:\n<table><tr><td>\\(\\quad A =\\)</td><td>{' + titles.join(',&#8203;') + '}</td></tr></table>';
 			if ( titles.length === 1 ) {
 				let v = this.v(titles[0]);
 				if ( v.type !== 0 ) {
 					let obs = this.types([-1],v.time)[0];
-					ss = 'Space:\n<table><tr><td>\\(\\quad S('+ this.pos(v) +')=\\)</td>';
+					ss += 'Space:\n<table><tr><td>\\(\\quad S(A)=\\)</td>';
 					ss += '<td>{' + this.space([v]).map(x => this.pos(x)).join(',&#8203;') + '}</td></tr></table>';
-					ss += 'Graph distance to observer:\n<table><tr><td>\\(\\quad d_G(X,' + this.pos(v) + ')=' + this.distance(obs,v) + '\\)</td></tr></table>';
+					ss += 'Graph distance to observer:\n<table><tr><td>\\(\\quad d_G(X,A)=' + this.distance(obs,v) + '\\)</td></tr></table>';
 				}
 			} else if (titles.length === 2 ) {
 				let v1  = this.v(titles[0]);
@@ -425,7 +445,7 @@ class BigraphQMDOT extends BigraphQM {
 				let d = this.hammingDistance(v1,v2);
 				let cs = this.cosineSimilarity(v1,v2);
 				if ( d && cs ) {
-					ss = 'Graph distance:\n<table><tr><td>\\(\\quad d_G(' + titles[0] + ',' + titles[1] + ')=' + this.distance(v1,v2) + '\\)</td></tr></table>';
+					ss += 'Graph distance:\n<table><tr><td>\\(\\quad d_G =' + this.distance(v1,v2) + '\\)</td></tr></table>';
 					ss += 'Hamming distance:\n<table><tr><td>\\(\\quad d_H = ' + d.d +
 						',\\quad |\\Omega| = ' + d.len +
 						',\\quad 1-{d_H \\over |\\Omega|} = ' + this.round(1-d.d/d.len,2) + '\\)</td></tr></table>';
@@ -434,6 +454,33 @@ class BigraphQMDOT extends BigraphQM {
 				}
 			}
 		}
+
+		// Selection status for cliques
+		if (titlesCliques && titlesCliques.length > 0) {
+			if ( ss.length ) ss += '<br/>';
+			if ( titlesCliques.length === 1 ) {
+				const [t,p] = titlesCliques[0].substring(1).split('_').map(Number);
+				ss += 'Selected:\n<table><tr><td>\\(\\quad A = C_{' + p + '}^{' + t + '}\\)</td></tr></table>';
+				let f = this.M1.get(t).f[p];
+				ss += 'Microstate:\n<table><tr><td>\\(\\quad \\mathcal{F}_A =\\)</td>';
+				ss += '<td>{' + f.map(x => this.pos(x)).join(',&#8203;') + '}</td></tr></table>';
+			} else if (titlesCliques.length === 2 ) {
+				const [t1,p1] = titlesCliques[0].substring(1).split('_').map(Number);
+				const [t2,p2] = titlesCliques[1].substring(1).split('_').map(Number);
+				ss += 'Selected:\n<table><tr><td>\\(\\quad A = C_{' + p1 + '}^{' + t1 + '},\\quad B = C_{' + p2 + '}^{' + t2 + '}\\)</td></tr></table>';
+				if ( t1 === t2 ) {
+					let m = this.M1.get(t1);
+					let d = 2 * m.f[p1].filter( x => m.f[p2].includes(x) ).length / ( m.f[p1].length + m.f[p2].length );
+					let theta = this.degreeToString( this.M2.get(t1).theta[p1][p2] );
+					ss += 'Relative phase:\n<table><tr><td>\\(\\quad \\theta_{A,B}=' + theta + ',\\quad D_{A,B}=' + this.round(d,2) + '\\)</td></tr></table>';
+				}
+			} else {
+				ss += 'Selected:\n<table><tr><td>\\(\\quad C =\\)</td><td>{' + titlesCliques.join(',&#8203;') + '}</td></tr></table>';
+			}
+		}
+
+		// Nothing selected
+		if ( ss.length === 0 ) ss += 'None.';
 
 		s.push( { id: 'd0', text: ss });
 		s.push( ...super.status(titles) );
