@@ -404,6 +404,9 @@ class BigraphQM extends Bigraph {
 			ss += '</table>';
 			ss += 'Probabilities:\n<table><tr><td>\\(\\quad Pr = \\)</td><td>(' + m.p.map( x => this.round(x,2,true) ).join(',&#8203;')+')</td></tr></table>';
 			s.push( { id: "d1", text: ss });
+
+			ss = '<table><tr><td>\\(\\quad \\phi = \\)</td><td>(' + m.p.map( x => this.round( Math.sqrt(x),2,true) ).join(',&#8203;')+')</td></tr></table>';
+			s.push( { id: "d2", text: ss });
 		}
 
 		// Final status, method 2

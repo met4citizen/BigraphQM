@@ -41,7 +41,7 @@
   details p { display: block; margin: 0 0 0 30px; padding: 5px 0;  white-space: pre-line; overflow-wrap: break-word; }
 
 
-  .toolkit { position: fixed; z-index: 3; opacity: 0.6; font-size: 1vw; color: black; text-align: center; vertical-align: middle; font-weight: bold; line-height: 3vw; cursor: default; pointer-events: none;}
+  .toolkit { position: fixed; z-index: 3; opacity: 0.6; font-size: 1vw; color: black; text-align: center; vertical-align: middle; font-weight: bold; line-height: 3vw; height: 6vw; cursor: default; pointer-events: none;}
   #topleft { top:0.1vw; left: 0; margin: 0 0 0 0.3vw; padding: 0.3vw; }
   #topright { top:0.1vw; right: 0; margin: 0 1vw 0 0; padding: 0.3vw; }
   .command, .setting { display:inline-block; margin:0; padding: 0; background-color: transparent; width: 3vw; height: 3vw; border: 0; border-radius: 0.5vw; cursor: pointer; pointer-events: auto; }
@@ -572,6 +572,10 @@ document.addEventListener('DOMContentLoaded', function(e) {
         </details>
         <details id="d3">
           <summary>DENSITY MATRIX \(\boldsymbol{\rho}\)</summary>
+          <p></p>
+        </details>
+        <details id="d2">
+          <summary>AMPLITUDES \(\boldsymbol{\phi}\)</summary>
           <p></p>
         </details>
         <details id="d4">
