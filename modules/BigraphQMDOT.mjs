@@ -20,17 +20,19 @@ class BigraphQMDOT extends BigraphQM {
 		this.base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 		// Graph style
-		this.styleGraph = 'ranksep=0.15 bgcolor=transparent ordering=in outputorder=edgesfirst';
+		this.styleGraph = 'ranksep=0.15 bgcolor=transparent ordering=in outputorder=edgesfirst node [fixedsize=true fontname=Helvetica fontsize="10pt" fontcolor=grey35 style=filled]';
 
 		// Type styles
-		this.styleObserver = 'node [class=observer shape=box fixedsize=true width=0.3 height=0.3 penwidth=1 fontname=Helvetica fontsize="10pt" fontcolor=grey35 color=grey style=filled fillcolor=white label="X"]';
+		this.styleObserver = 'node [class=observer shape=box width=0.3 height=0.3 penwidth=1 color=grey fillcolor=white label="X"]';
 		this.styleEnvironment = 'node [class=environment label="E"]';
 		this.styleEvent = 'node [class=event shape=circle image="" width=0.14 height=0.14 penwidth=0 fillcolor=grey label=""]';
 		this.styleToken = 'node [class=token width=0.28 height=0.28 penwidth=0 color=white label="0" colorscheme=orrd6 fillcolor=1]';
-		this.styleClique = 'node [class=clique shape=box width=0.4 height=0.3 label="0" colorscheme=orrd6 fillcolor=1]';
+		this.styleClique = 'node [class=clique shape=box width=0.4 height=0.3 penwidth=0 label="0" colorscheme=orrd6 fillcolor=1]';
+		this.styleK = 'node [class=token shape=circle width=0.28 height=0.28 penwidth=0 color=white label="0" colorscheme=orrd6 fillcolor=1]';
 
 		// Edge styles
 		this.styleEdge = 'edge [class=link penwidth=1.5 color=grey arrowhead=normal arrowsize=0.5 style=solid weight=1]';
+		this.styleEdgeK = 'edge [class=link penwidth=1.5 color=grey arrowhead=none style=solid weight=1]';
 		this.styleOrdering = 'rank=same edge [class=order style=none arrowhead=none penwidth=12 color=transparent weight=10]';
 
 		// Selection styles
@@ -314,6 +316,94 @@ class BigraphQMDOT extends BigraphQM {
 		}
 
 		return 'digraph {\n\n' + this.cacheC + s + '\n\n}';
+	}
+
+	/**
+	* DOT K-graphs
+	* @param {String[]} [titlesCliques=null] If specified, vertices to highlight
+	* @return {String}
+	*/
+	dotK( titlesCliques=null ) {
+		if ( this.needsupdate ) this.refresh();
+
+		const m = this.M1.get(this.time);
+
+		// Selected tokens
+		const selTokens = [];
+		if ( titlesCliques && titlesCliques.length ) {
+			titlesCliques.forEach( x => {
+				let i = x.split('_')[1];
+				m.f[i].forEach( v => selTokens.push(v) );
+			});
+		}
+
+		// Tokens
+		let s = this.styleGraph + '\n\nsubgraph cluster_A { bgcolor=white color=white fontcolor=grey35 label="G\'"\n\n' + this.styleK;
+		const t = [...new Set( m.f.flat() )];
+		s += ' ' + t.map( v => this.title(v) ).join(' ') + '\n\n';
+
+		t.forEach( v => {
+			let label = this.round(v.p,2).toString();
+			if ( label > 0 && label < 1 ) label = '.' + label.split('.')[1];
+			let fillcolor = this.round(v.p*5)+1;
+			s += ' ' + this.title(v) + ' [label="' + label +'" fillcolor=' + fillcolor;
+			if ( selTokens.includes(v) ) {
+				s += ' ' + this.styleSelNode;
+			}
+			s += ']';
+		});
+
+		s += '\n\n' + this.styleEdgeK;
+
+		const es = [];
+		const essel = [];
+		m.f.forEach( x => {
+			for(let i=0; i<x.length-1; i++) {
+				for(let j=i+1; j<x.length; j++) {
+					let e = this.title(x[i]) + '--' + this.title(x[j]);
+					if ( !es.includes(e) ) {
+						es.push(e);
+						essel.push( selTokens.includes(x[i]) && selTokens.includes(x[j]) );
+					}
+				}
+			}
+		});
+		es.forEach( (e,i) => {
+			s += ' ' + e + (essel[i] ? ' [' + this.styleSelLink + ']' : '');
+		});
+
+		// Cliques
+		s += '\n\n}\n\nsubgraph cluster_B { bgcolor=white color=white fontcolor=grey35 label="K(G\')"\n\n' + this.styleClique;
+		s += ' ' + m.p.map( (x,i) => 'C' + this.time + '_' + i ).join(' ') + '\n\n';
+
+		m.p.forEach( (x,i) => {
+			let title = 'C' + this.time + '_' + i;
+			s += ' ' + title + ' [label="' + this.round(100*x) +
+				'%" fillcolor=' + (this.round(x*5)+1) + ']';
+		});
+
+		s += '\n\n' + this.styleEdgeK;
+		for(let i=0; i<m.f.length-1; i++) {
+			let title1 = 'C' + this.time + '_' + i;
+			for(let j=i+1; j<m.f.length; j++) {
+				if ( m.f[j].some( x => m.f[i].includes(x) ) ) {
+					let title2 = 'C' + this.time + '_' + j;
+					s += ' ' + title1 + '--' + title2;
+				}
+			}
+		}
+
+		s += '\n\n}';
+
+		// Selected cliques
+		if ( titlesCliques && titlesCliques.length ) {
+			s += '\n\n';
+			titlesCliques.forEach( x => {
+				s += ' ' + x + ' [' + this.styleSelClique + ']';
+			});
+		}
+
+		return 'graph {\n\n' + s + '\n\n}';
 	}
 
 

@@ -8,8 +8,8 @@ to quantum mechanics.
 In the current version, quantum systems can be modelled by manually building
 [bipartite graphs](https://en.wikipedia.org/wiki/Bipartite_graph).
 The method for calculating probabilities is based on finding maximal
-[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
-In the app we use a variant of the
+[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29)
+by using a variant of the
 [Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron–Kerbosch_algorithm).
 
 **Run it: https://met4citizen.github.io/BigraphQM/**
@@ -62,7 +62,9 @@ Let $G$ be a directed
 $V_{token}$ and
 $V_{event}$.
 
-$\displaystyle\qquad G= (V_{token} \cup V_{event}, E),\quad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
+$\displaystyle\qquad G= (V_{token} \cup V_{event}, E),$
+
+$\displaystyle\qquad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
 
 At each new step, the latest set of tokens $L_{token}$ is connected
 to a new set of events that produces the next generation of tokens.
@@ -89,13 +91,14 @@ first enumerate all the sequences of interactions and then take their
 images. The problem is that the number of sequences grows factorially and
 the algorithm has time complexity $O(n!)$.
 
-Instead we let $\Omega$ induce an undirected graph in which each token's
+Instead we let $\Omega$ induce an undirected graph $G^\prime$ in which
+each token's
 [neighbourhood](https://en.wikipedia.org/wiki/Neighbourhood_%28graph_theory%29)
-$N(v)$ is the set of all spacelike tokens relative to that token.
+$N^\prime (v)$ is the set of all spacelike tokens relative to that token.
 
-$\displaystyle\qquad N(v) = S(v)\cap \Omega,\quad v\in\Omega$
+$\displaystyle\qquad N^\prime (v) = S(v)\cap \Omega,\quad v\in\Omega$
 
-The outcomes $\mathcal{F}$ are this graph's maximal
+The outcomes $\mathcal{F}$ are $G^\prime$s maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 
 Finding all maximal cliques is an NP-complete problem, but solvable
@@ -117,6 +120,11 @@ ALGORITHM BK(R, P, X) IS
         P := P \ {v}
         X := X ⋃ {v}
 ```
+
+These outcomes $\mathcal{F}$ can also be presented as a clique graph
+$K(G^\prime)$ in which every vertex represents a maximal clique of
+$G^\prime$ and two vertices are adjacent when the cliques share
+at least one vertex in common.
 
 Let $p_j$ be the proportion of all the consistent interactions leading to
 the clique $\mathcal{F_j}\in\mathcal{F}$.
@@ -151,6 +159,8 @@ $H_1$.
 
 $\displaystyle\qquad H_1 = -\sum_j p_j \log p_j$
 
+#### Past Hypothesis
+
 Suppose we start with the
 [past hypothesis](https://en.wikipedia.org/wiki/Past_hypothesis)
 so that all the tokens in $\Omega$ are mutually consistent. It means that
@@ -166,18 +176,19 @@ lowest free energy.
 
 $\displaystyle\qquad H_{1,max} = - \log \frac{1}{|\Omega|},\quad E_{min} = |\Omega|$
 
-Unfortunately the Shannon entropy doesn't tell us anything about
-the overlap of the states. In order to measure the system's entanglement,
-we define $D_{A,B}$ as the overlap between two cliques and extend the
-approach to all combinations.
+#### Entanglement
+
+Let $D_{A,B}$ be the overlap between two cliques.
 
 $\displaystyle\qquad D_{A,B} = {{2|A\cap B|}\over{|A|+|B|}}$
 
+We can extend this measure to all combinations.
+
 $\displaystyle\qquad D = {{\sum 2|A\cap B|}\over{\sum(|A|+|B|)}},\quad \{A,B\}\in\binom{\mathcal{F}}{2}$
 
-If $D=0$, none of the outcome overlap.
+If $D=0$, none of the outcomes overlap.
 If $D=1$, all the outcomes are the same.
-The measure is not defined with only one outcome.
+Note that the measure is not defined with only one outcome.
 
 
 #### Density matrix
@@ -194,14 +205,16 @@ is the weighted sum of the outer products of the pure states.
 
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
+Note that the density matrix, as it is described here, is a limited
+projection and unable to represent the detailed ancestral structure.
+The bipartite graph is the actual data structure of the model.
+
+#### Phases
+
 Based the overlap of two cliques $D_{A,B}$ we can calculate their
 relative phase $\theta_{A,B}$ in radians.
 
 $\displaystyle\qquad \theta_{A,B} = (1 - D_{A,B})\frac{\pi}{2}$
-
-Note that the density matrix, as it is described here, is a limited
-projection and unable to represent the detailed ancestral structure.
-The bipartite graph is the actual data structure of the model.
 
 
 #### Computational Basis
@@ -258,7 +271,7 @@ TOOL| DESCRIPTION
 ![](img/del.svg)<br/><sup>DEL</sup> | Delete the selected token/event/edge together with all its parents and children that are dependent on it.
 ![](img/obs.svg)<br/><sup>MEASURE</sup> | Shortcut for making a random proto-measurement.
 ![](img/env.svg)<br/><sup>DECOHERE</sup> | Shortcut for adding random decoherence to the system.
-![](img/view.svg)<br/><sup>CLIQUES</sup> | Show a view with maximal cliques (classical states) and their probabilities. Note: While this view is shown the editing mode is disabled.
+<b>B C</b><br/><sup>VIEW</sup> | Switch to an alternative view: B) Maximal cliques (classical states) and their probabilities, C) the final state with the induced graph G' and its clique graph K(G'). Note: While an alternative view is shown the editing mode is disabled.
 ![](img/info.svg)<br/><sup>INFO</sup> | Show the sidebar with details. The details include information about the selected tokens, probabilities, direct URL link to the graph, and the DOT source describing the shown graph. Refer to [The Model](#the-model) for an explanation of the presented mathematical concepts.
 ![](img/url.svg)<br/><sup>URL</sup> | Copy URL to clipboard. Parameter `g` includes the Base64 encoded bipartite graph.
 ![](img/svg.svg)<br/><sup>SVG</sup> | Download the shown bipartite graph as a SVG file.

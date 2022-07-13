@@ -44,9 +44,9 @@
   .toolkit { position: fixed; z-index: 3; opacity: 0.6; font-size: 1vw; color: black; text-align: center; vertical-align: middle; font-weight: bold; line-height: 3vw; height: 6vw; cursor: default; pointer-events: none;}
   #topleft { top:0.1vw; left: 0; margin: 0 0 0 0.3vw; padding: 0.3vw; }
   #topright { top:0.1vw; right: 0; margin: 0 1vw 0 0; padding: 0.3vw; }
-  .command, .setting { display:inline-block; margin:0; padding: 0; background-color: transparent; width: 3vw; height: 3vw; border: 0; border-radius: 0.5vw; cursor: pointer; pointer-events: auto; }
+  .command, .setting { display:inline-block; margin:0; padding: 0; background-color: transparent; width: 3vw; height: 3vw; border: 0; border-radius: 0.5vw; vertical-align:middle; text-align: center; font-size: 2vw; cursor: pointer; pointer-events: auto; }
   .command svg, .setting svg { display:inline-block; margin: 0; padding: 0; width: 3vw; height: 3vw; }
-  .subtitle { display:inline-block; position: absolute; color: black; margin-top: 3vw; margin-left: 1.3vw; transform: translate(-50%,0); }
+  .subtitle { display:inline-block; position: absolute; font-size: 1vw; color: black; margin-top: 3vw; margin-left: 1.3vw; transform: translate(-50%,0); }
   .subtitlemid { display:inline-block; position: absolute; margin-top: 3vw; margin-left: -2px; transform: translate(-50%,0); pointer-events: none; }
   .vl { display:inline-block; width: 1vw; }
   .command:active, .setting:active, .selected { background-color: black; color: white; }
@@ -121,7 +121,8 @@ function ready() {
 
   // Disable/enable editing
   let isC = d3.select('#classical').classed('selected');
-  if ( isC ) {
+  let isK = d3.select('#final').classed('selected');
+  if ( isC || isK ) {
     // Disable
     d3.selectAll('.observer,.token,.event,.environment')
       .on('dblclick mousedown touchstart mouseup touchend',null);
@@ -300,16 +301,17 @@ function ready() {
 function render( changed=true ) {
   // Disable/enable editor tools
   let isC = d3.select('#classical').classed('selected');
+  let isK = d3.select('#final').classed('selected');
   let l = selected.length;
   d3.select('#undo').classed('disabled',qm.UNDO.length == 0);
   d3.select('#redo').classed('disabled',qm.REDO.length == 0);
-  d3.select('#dectime').classed('disabled', isC || qm.time <= qm.inittime);
-  d3.select('#inctime').classed('disabled', isC );
+  d3.select('#dectime').classed('disabled', isC || isK || qm.time <= qm.inittime);
+  d3.select('#inctime').classed('disabled', isC || isK );
   d3.select('#addbranch').classed('disabled',
-    isC || l != 1 || !qm.isAllowedBranch(qm.v( selected[0] ) )
+    isC || isK || l != 1 || !qm.isAllowedBranch(qm.v( selected[0] ) )
   );
   d3.select('#del').classed('disabled',
-    isC || l==0 || l>2 || (l == 1 && !qm.branch( qm.v( selected[0]) ).length) ||
+    isC || isK || l==0 || l>2 || (l == 1 && !qm.branch( qm.v( selected[0]) ).length) ||
     (l == 2 && !qm.isEdge( qm.v( selected[0] ), qm.v( selected[1] ) ) )
   );
 
@@ -321,9 +323,10 @@ function render( changed=true ) {
     }
 
     let dot = '';
-    let isC = d3.select('#classical').classed('selected');
     if ( isC ) {
       dot = qm.dotC(selectedCliques); // Classical states
+    } else if ( isK ) {
+      dot = qm.dotK(selectedCliques); // K states
     } else {
       if ( dragstart ) {
         dot = qm.dotQ([ dragstart.title ],selectedCliques); // Quantum states (editor mode)
@@ -492,6 +495,14 @@ document.addEventListener('DOMContentLoaded', function(e) {
         break;
 
       case 'classical':
+        d3.select("#final").classed('selected',false);
+        selected.length = 0;
+        selectedCliques.length = 0;
+        render(false);
+        break;
+
+      case 'final':
+        d3.select("#classical").classed('selected',false);
         selected.length = 0;
         selectedCliques.length = 0;
         render(false);
@@ -622,7 +633,9 @@ document.addEventListener('DOMContentLoaded', function(e) {
     <span id="decohere" class="command" title="Decohere"><span class="subtitle">DECOHERE</span><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M11 0H13V4.06189C12.6724 4.02104 12.3387 4 12 4C11.6613 4 11.3276 4.02104 11 4.06189V0ZM7.0943 5.68018L4.22173 2.80761L2.80752 4.22183L5.6801 7.09441C6.09071 6.56618 6.56608 6.0908 7.0943 5.68018ZM4.06189 11H0V13H4.06189C4.02104 12.6724 4 12.3387 4 12C4 11.6613 4.02104 11.3276 4.06189 11ZM5.6801 16.9056L2.80751 19.7782L4.22173 21.1924L7.0943 18.3198C6.56608 17.9092 6.09071 17.4338 5.6801 16.9056ZM11 19.9381V24H13V19.9381C12.6724 19.979 12.3387 20 12 20C11.6613 20 11.3276 19.979 11 19.9381ZM16.9056 18.3199L19.7781 21.1924L21.1923 19.7782L18.3198 16.9057C17.9092 17.4339 17.4338 17.9093 16.9056 18.3199ZM19.9381 13H24V11H19.9381C19.979 11.3276 20 11.6613 20 12C20 12.3387 19.979 12.6724 19.9381 13ZM18.3198 7.0943L21.1923 4.22183L19.7781 2.80762L16.9056 5.6801C17.4338 6.09071 17.9092 6.56608 18.3198 7.0943Z" fill="currentColor" /></svg></span>
     <span class="vl"></span>
     <span class="vl"></span>
-    <span id="classical" class="setting" title="Maximal cliques"><span class="subtitle">CLIQUES</span><svg viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12ZM14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3C17.5915 3 22.2898 6.82432 23.6219 12C22.2898 17.1757 17.5915 21 12 21C6.40848 21 1.71018 17.1757 0.378052 12C1.71018 6.82432 6.40848 3 12 3ZM12 19C7.52443 19 3.73132 16.0581 2.45723 12C3.73132 7.94186 7.52443 5 12 5C16.4756 5 20.2687 7.94186 21.5428 12C20.2687 16.0581 16.4756 19 12 19Z" fill="currentColor" /></svg></span>
+    <span id="classical" class="setting" title="Maximal cliques">B</span>
+    <span class="subtitlemid">VIEW</span>
+    <span id="final" class="setting" title="Final state">C</span>
   </div>
 
   <div id="topright" class="toolkit noselect">
