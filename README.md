@@ -98,8 +98,9 @@ $N^\prime (v)$ is the set of all spacelike tokens relative to that token.
 
 $\displaystyle\qquad N^\prime (v) = S(v)\cap \Omega,\quad v\in\Omega$
 
-The outcomes $\mathcal{F}$ are $G^\prime$s maximal
-[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
+The outcomes $\mathcal{F}$ are the maximal
+[cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29)
+of the $G^\prime$.
 
 Finding all maximal cliques is an NP-complete problem, but solvable
 within our sample space sizes. In the app we use a variant of the
