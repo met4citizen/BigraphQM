@@ -39,8 +39,8 @@ $C$ don't have to be consistent with each other.
 This gives the system many of its quantum mechanical properties.
 
 Measurement is the process in which some part (*observer*) interacts
-with some other spacelike part (*system*) in a way that resolves
-all these second-order inconsistencies. The result is a set of mutually
+with some other spacelike part (*system*) in a way that resolves all these
+second-order inconsistencies. The result is a set of mutually
 inconsistent outcomes in each of which every pair is consistent.
 In graph theory, these kind of subgraphs are called maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
@@ -50,7 +50,7 @@ lead to the same maximal clique
 (*[image](https://en.wikipedia.org/wiki/Image_%28mathematics%29)*,
 *unordered set*). From the observer's point of view, the proportion of all
 the sequences that lead to each maximal clique is the probability, or more
-precisely, the *weight*, of that outcome.
+precisely the *weight*, of that outcome.
 
 
 ## The Model
@@ -59,24 +59,24 @@ precisely, the *weight*, of that outcome.
 
 Let $G$ be a directed
 [bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
-$V_{token}$ and
-$V_{event}$.
+tokens $V_{TO}$ and events
+$V_{EV}$.
 
-$\displaystyle\qquad G= (V_{token} \cup V_{event}, E),$
+$\displaystyle\qquad G= (V_{TO} \cup V_{EV}, E),$
 
-$\displaystyle\qquad E\subseteq (V_{token}{\times}V_{event})\cup (V_{event}{\times}V_{token})$
+$\displaystyle\qquad E\subseteq (V_{TO}{\times}V_{EV})\cup (V_{EV}{\times}V_{TO})$
 
-At each new step, the latest set of tokens $L_{token}$ is connected
+At each new step, the latest set of tokens $L_{TO}$ is connected
 to a new set of events that produces the next generation of tokens.
 
-$\displaystyle\qquad L_{token}=\big\lbrace v \in V_{token}\mid\mathbf{deg^+} (v)=0 \big\rbrace$
+$\displaystyle\qquad L_{TO}=\big\lbrace v \in V_{TO}\mid\mathbf{deg^+} (v)=0 \big\rbrace$
 
 Two tokens are spacelike if and only if their
 [lowest common ancestors](https://en.wikipedia.org/wiki/Lowest_common_ancestor)
-(LCA) are events. This means that the concept of space $S(X)\subset L_{token}$
-is always relative to some observer $X\subset L_{token}$.
+(LCA) are events. This means that the concept of space $S(X)\subset L_{TO}$
+is always relative to some observer $X\subset L_{TO}$.
 
-$\displaystyle\qquad S(X)=\big\lbrace v\in L_{token}\mid\forall a{\in} \mathbf{lca}(X,v): a \in V_{event}\big\rbrace$
+$\displaystyle\qquad S(X)=\big\lbrace v\in L_{TO}\mid\mathbf{lca}(X,v)\subseteq V_{EV}\big\rbrace$
 
 #### Probabilities
 
@@ -100,7 +100,9 @@ $\displaystyle\qquad N^\prime (v) = S(v)\cap \Omega,\quad v\in\Omega$
 
 The outcomes $\mathcal{F}$ are the maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29)
-of the $G^\prime$.
+of the $G^\prime$. These cliques can also be presented as a clique graph
+$K(G^\prime)$ in which every vertex represents a maximal clique and
+two vertices are adjacent when they share at least one vertex in common.
 
 Finding all maximal cliques is an NP-complete problem, but solvable
 within our sample space sizes. In the app we use a variant of the
@@ -122,24 +124,18 @@ ALGORITHM BK(R, P, X) IS
         X := X ⋃ {v}
 ```
 
-These outcomes $\mathcal{F}$ can also be presented as a clique graph
-$K(G^\prime)$ in which every vertex represents a maximal clique of
-$G^\prime$ and two vertices are adjacent when the cliques share
-at least one vertex in common.
-
 Let $p_j$ be the proportion of all the consistent interactions leading to
 the clique $\mathcal{F_j}\in\mathcal{F}$.
-
-$\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k} |\mathcal{F_k}|!}},\quad j\in\{1,\dots,|\mathcal{F}|\}$
-
 Informally $p_j$ is the probability of the outcome
 $\mathcal{F_j}$. However, if we buy into the philosophy that all the consistent
 interactions are realized, we should really think of it as a clique weight.
 
-Based on these weights, we can calculate the weight $\lambda_i$ for the
+$\displaystyle\qquad p_j={{|\mathcal{F_j}|!}\over{\sum\limits_{k} |\mathcal{F_k}|!}},\quad j\in \lbrace 1,\dots,|\mathcal{F}| \rbrace$
+
+Based on the weights, we can calculate the weight $\lambda_i$ for the
 token $v_i\in\Omega$ to be included in some (any) clique.
 
-$\displaystyle\qquad \lambda_i=\sum_{j}\mathbf{1}_\mathcal{F_j}{(v_i)} p_j,\quad i\in\{1,\dots,|\Omega|\}$
+$\displaystyle\qquad \lambda_i=\sum_{j}\mathbf{1}_\mathcal{F_j}{(v_i)} p_j,\quad i\in\lbrace 1,\dots,|\Omega|\rbrace$
 
 
 #### Energy & Entropy
@@ -154,7 +150,7 @@ $\langle E\rangle$ can be calculated by using the clique weights and sizes.
 
 $\displaystyle\qquad \langle E\rangle = \sum_j p_j|\mathcal{F_j}|$
 
-Using the clique weights we can also calculate the
+Using the clique weights we can calculate the
 [Shannon entropy](https://en.wikipedia.org/wiki/Entropy_%28information_theory%29)
 $H_1$.
 
