@@ -73,8 +73,8 @@ $\displaystyle\qquad L_{TO}=\big\lbrace v \in V_{TO}\mid\mathbf{deg^+} (v)=0 \bi
 
 Two tokens are spacelike if and only if their
 [lowest common ancestors](https://en.wikipedia.org/wiki/Lowest_common_ancestor)
-(LCA) are events. This means that the concept of space $S(X)\subset L_{TO}$
-is always relative to some observer $X\subset L_{TO}$.
+(LCA) are events. This means that the concept of space $S$
+is relative to some observer $X\subset L_{TO}$.
 
 $\displaystyle\qquad S(X)=\big\lbrace v\in L_{TO}\mid\mathbf{lca}(X,v)\subseteq V_{EV}\big\rbrace$
 
