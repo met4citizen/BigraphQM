@@ -166,8 +166,14 @@ the system has the lowest entropy and the highest free energy.
 $\displaystyle\qquad H_{1,min} = 0,\quad E_{max} = |\Omega| |\Omega|!$
 
 If the system interacts only with itself, it tends to become more
-inconsistent over time following the
+inconsistent over time. This means that it seems to be compatible with the
 [second law of thermodynamics](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics).
+
+Furthermore, since each interaction decreases the average size of
+the cliques, and thus the probability for that specific branch,
+[the principle of least action](https://en.wikipedia.org/wiki/Stationary-action_principle)
+applies and determines the most likely path.
+
 Eventually the system will reach its highest entropy state with the
 lowest free energy.
 
