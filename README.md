@@ -35,10 +35,9 @@ a sequence of operations and their operands.
 For two sequences to interact, they must be local and mutually
 consistent (i.e. *spacelike*).
 
-For two maximal paths to interact in our model, their paths must compute
-the same function and the two functions must be composable
-in parallel. Technically, the latter means that their lowest common ancestors
-must be operations, not operands.
+In our model, for two operands to interact, their maximal paths must compute
+the same function and be composable in parallel. Technically, the latter
+means that their lowest common ancestors must be operations, not operands.
 
 Since consistency is a pairwise property, there can be situations in which
 some sequence $A$ is consistent with both
