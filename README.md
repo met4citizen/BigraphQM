@@ -16,32 +16,44 @@ by using a variant of the
 
 The app uses [@hpcc-js/wasm](https://github.com/hpcc-systems/hpcc-js-wasm) for
 rendering graphs and [KaTeX](https://katex.org) for displaying LaTeX notation.
-The idea for the model, together with its interpretation, is a spin-off
-of my earlier project [Hypergraph](https://github.com/met4citizen/Hypergraph).
+The model is a spin-off of my earlier project
+[Hypergraph](https://github.com/met4citizen/Hypergraph).
+For a philosophical take on these ideas see my blog post
+[The Game of Algorithms](https://metacity.blogspot.com).
 
 
 ## Overview
 
-In physical reality all the possible sequences of interactions happen.
-Relative to each other, these sequences can be either consistent or
-inconsistent. Only consistent (i.e. *spacelike*) sequences can interact.
+We start with the assumption that at the lowest level of physical reality
+all the possible sequences of interactions get actualized.
 
-In our model, sequences are thought of as maximal paths in a directed
+We model these sequences as maximal paths in a directed
 [bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph).
-Whether two paths are consistent or not, depends on the ancestral
-relations of their elements.
+The model is computational so that each maximal path describes
+a sequence of operations and their operands.
 
-Consistency is a pairwise property. That is, if $A$ is consistent with both
-$B$ and
-$C$,
-$B$ and
-$C$ don't have to be consistent with each other.
-This gives the system many of its quantum mechanical properties.
+For two sequences to interact, they must be local and mutually
+consistent (i.e. *spacelike*).
 
-Measurement is the process in which some part (*observer*) interacts
-with some other spacelike part (*system*) in a way that resolves all these
-second-order inconsistencies. The result is a set of mutually
-inconsistent outcomes in each of which every pair is consistent.
+For two maximal paths to interact in our model, their paths must compute
+the same function and the two functions must be composable
+in parallel. Technically, the latter means that their lowest common ancestors
+must be operations, not operands.
+
+Since consistency is a pairwise property, there can be situations in which
+some sequence $A$ is consistent with both
+$B$ and
+$C$, but
+$B$ and
+$C$ are not consistent with each other. We can think of these situations
+as second-order inconsistencies or *superpositions*. If we make a new graph
+in which sequences are nodes and edges connect consistent pairs,
+second-order inconsistencies show up as *open triplets*.
+
+Interaction/observation is a process in which some internal part (*observer*)
+interacts with some other spacelike part (*system*) in a way that resolves
+these second-order inconsistencies. The result will be a set of mutually
+inconsistent outcomes in each of which every pair is connected.
 In graph theory, these kind of subgraphs are called maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29).
 
@@ -49,60 +61,59 @@ There are typically many sequences (*permutations*, *ordered sets*) that
 lead to the same maximal clique
 (*[image](https://en.wikipedia.org/wiki/Image_%28mathematics%29)*,
 *unordered set*). From the observer's point of view, the proportion of all
-the sequences that lead to each maximal clique is the probability, or more
-precisely the *weight*, of that outcome.
+the sequences that lead to each maximal clique is the probability — or more
+precisely the *weight* — of that outcome.
+
+NOTE: In our current model we consider all the maximal paths as local.
 
 
 ## The Model
 
 #### Basic concepts
 
-Let $G$ be a directed
-[bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph) with parts
-tokens $V_{TO}$ and events
-$V_{EV}$.
+Let $H$ be a directed
+[bipartite graph](https://en.wikipedia.org/wiki/Bipartite_graph) with
+two parts: operations $V_1$
+and operands $V_2$.
 
-$\displaystyle\qquad G= (V_{TO} \cup V_{EV}, E),$
+$\displaystyle\qquad H= (V_1 \cup V_2, E),$
 
-$\displaystyle\qquad E\subseteq (V_{TO}{\times}V_{EV})\cup (V_{EV}{\times}V_{TO})$
+$\displaystyle\qquad E\subseteq (V_1{\times}V_2)\cup (V_2{\times}V_1)$
 
-At each new step, the latest set of tokens $L_{TO}$ is connected
-to a new set of events that produces the next generation of tokens.
+At each new step, the lowest set of operands $L_2$ is connected
+to a new set of operations that compute the next generation of operands.
 
-$\displaystyle\qquad L_{TO}=\big\lbrace v \in V_{TO}\mid\mathbf{deg^+} (v)=0 \big\rbrace$
+$\displaystyle\qquad L_2=\big\lbrace v \in V_2\mid\mathbf{deg^+} (v)=0 \big\rbrace$
 
-Two tokens are spacelike if and only if their
+Two operands are spacelike if and only if their
 [lowest common ancestors](https://en.wikipedia.org/wiki/Lowest_common_ancestor)
-(LCA) are events. This means that the concept of space $S$
-is relative to some observer $X\subset L_{TO}$.
+(LCA) are operations. Let an undirected graph $G$ track all such pairs.
 
-$\displaystyle\qquad S(X)=\big\lbrace v\in L_{TO}\mid\mathbf{lca}(X,v)\subseteq V_{EV}\big\rbrace$
+$\displaystyle\qquad G= (L_2, F),$
+
+$\displaystyle\qquad F = \big\lbrace (a,b)\mid a,b\in L_2 \wedge\mathbf{LCA}_H(a,b)\subset V_1\big\rbrace$
+
+NOTE: In our current model we consider all maximal paths as local in the sense
+that they compute the same function.
 
 #### Probabilities
 
 Let the [sample space](https://en.wikipedia.org/wiki/Sample_space) $\Omega$
-be some subset of the space $S$ relative to an observer
+be the
+[neighbourhood graph](https://en.wikipedia.org/wiki/Neighbourhood_%28graph_theory%29)
+$N_G$ relative to an observer
 $X$.
 
-$\displaystyle\qquad\Omega\subseteq S(X)$
+$\displaystyle\qquad\Omega= N_G(X)$
 
-One way to find all the measurement outcomes $\mathcal{F}$ is to
+One way to find all the possible measurement outcomes $\mathcal{F}$ is to
 first enumerate all the sequences of interactions and then take their
-images. The problem is that the number of sequences grows factorially and
+images. The problem is that the number of sequences grows factorially so that
 the algorithm has time complexity $O(n!)$.
 
-Instead we let $\Omega$ induce an undirected graph $G^\prime$ in which
-each token's
-[neighbourhood](https://en.wikipedia.org/wiki/Neighbourhood_%28graph_theory%29)
-$N^\prime (v)$ is the set of all spacelike tokens relative to that token.
-
-$\displaystyle\qquad N^\prime (v) = S(v)\cap \Omega,\quad v\in\Omega$
-
-The outcomes $\mathcal{F}$ are the maximal
+Instead, we approach the problem by finding all the maximal
 [cliques](https://en.wikipedia.org/wiki/Clique_%28graph_theory%29)
-of the $G^\prime$. These cliques can also be presented as a clique graph
-$K(G^\prime)$ in which every vertex represents a maximal clique and
-two vertices are adjacent when they share at least one vertex in common.
+of $\Omega$.
 
 Finding all maximal cliques is an NP-complete problem, but solvable
 within our sample space sizes. In the app we use a variant of the
@@ -140,7 +151,7 @@ $\displaystyle\qquad \lambda_i=\sum_{j}\mathbf{1}_\mathcal{F_j}{(v_i)} p_j,\quad
 
 #### Energy & Entropy
 
-Let $E_{free}$ be the system's free energy. Here one interaction is
+Let $E_{free}$ be the system's free energy. One interaction is
 considered equivalent to one unit of energy.
 
 $\displaystyle\qquad E_{free} = \sum_j |\mathcal{F_j}||\mathcal{F_j}|!$
@@ -166,7 +177,7 @@ the system has the lowest entropy and the highest free energy.
 $\displaystyle\qquad H_{1,min} = 0,\quad E_{max} = |\Omega| |\Omega|!$
 
 If the system interacts only with itself, it tends to become more
-inconsistent over time. This means that it seems to be compatible with the
+inconsistent over time. This seems to be compatible with the
 [second law of thermodynamics](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics).
 
 Furthermore, since each interaction decreases the average size of
@@ -187,11 +198,11 @@ $\displaystyle\qquad D_{A,B} = {{2|A\cap B|}\over{|A|+|B|}}$
 
 We can extend this measure to all combinations.
 
-$\displaystyle\qquad D = {{\sum 2|A\cap B|}\over{\sum(|A|+|B|)}},\quad \{A,B\}\in\binom{\mathcal{F}}{2}$
+$\displaystyle\qquad D = {{\sum 2|A\cap B|}\over{\sum(|A|+|B|)}},\quad \{(A,B)\}\in\binom{\mathcal{F}}{2}$
 
 If $D=0$, none of the outcomes overlap.
 If $D=1$, all the outcomes are the same.
-Note that the measure is not defined with only one outcome.
+The measure is not defined with only one outcome.
 
 
 #### Density matrix
@@ -208,7 +219,7 @@ is the weighted sum of the outer products of the pure states.
 
 $\displaystyle\qquad \rho=\sum_{j=1}^{m} p_j|\psi_j\rangle\langle\psi_j|$
 
-Note that the density matrix, as it is described here, is a limited
+NOTE: The density matrix, as described here, is a limited
 projection and unable to represent the detailed ancestral structure.
 The bipartite graph is the actual data structure of the model.
 
@@ -224,7 +235,7 @@ $\displaystyle\qquad \theta_{A,B} = (1 - D_{A,B})\frac{\pi}{2}$
 
 From the observer's point of view all the tokens are identical. It means
 that they can't distinguish between two local cliques with the same number
-of tokens. At measurement they can, however, distinguish the number of
+of tokens. At measurement they might, however, distinguish the number of
 interactions (i.e. energy), which is proportional to the size of the clique.
 
 So, in order to create a two-state system that the observer can use for
